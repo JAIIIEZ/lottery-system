@@ -1,12 +1,12 @@
 package com.spring.service.impl;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.exception.ResourceNotFoundException;
+import com.spring.exception.UnableToSubmitLotteryTicket;
 import com.spring.model.Lottery;
 import com.spring.model.LotteryStatus;
 import com.spring.model.LotteryTicket;
@@ -24,13 +24,12 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
     private LotteryService lotteryService;
 
     @Override
-    public boolean submitLotteryTicket(Long userId, Long lotteryId)
+    public boolean submitLotteryTicket(Long userId, Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
     {
         Lottery lottery = lotteryService.findById(lotteryId);
 
         if (LotteryStatus.PASSIVE.equals(lottery.getStatus())) {
-            //new throw .. this lottery had finished
-            return false;
+            throw new UnableToSubmitLotteryTicket("Lottery is passive for this id :: " + lottery.getId());
         } else {
             LotteryTicket ticket = new LotteryTicket();
             ticket.setLotteryId(lotteryId);
@@ -47,20 +46,16 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
     }
 
     @Override
-    public Long selectRandomLotteryWinner(Long lotteryId) {
+    public Long selectRandomLotteryWinner(Long lotteryId) throws ResourceNotFoundException
+    {
         Long count = lotteryTicketRepository.countLotteryTicketByLotteryId(lotteryId);
 
-        try
-        {
-            Random rand = SecureRandom.getInstanceStrong();
-            int random = rand.nextInt(count.intValue() + 1);
-            LotteryTicket ticket = lotteryTicketRepository.findByLotteryNumberAndLotteryId(Long.valueOf(random), lotteryId);
-            return ticket.getLotteryNumber();
+        SecureRandom rand = new SecureRandom();
+        int random = rand.nextInt(count.intValue());
+        LotteryTicket ticket = lotteryTicketRepository.findByLotteryNumberAndLotteryId(Long.valueOf(random + 1), lotteryId);
+        if (ticket == null) {
+            throw new ResourceNotFoundException("Lottery ticket couldn't find for this lottery number :: " + random + 1);
         }
-        catch (NoSuchAlgorithmException e)
-        {
-            throw new RuntimeException(e);
-        }
-
+        return ticket.getLotteryNumber();
     }
 }

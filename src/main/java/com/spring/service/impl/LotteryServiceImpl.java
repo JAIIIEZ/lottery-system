@@ -1,12 +1,11 @@
 package com.spring.service.impl;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.exception.ResourceNotFoundException;
 import com.spring.model.Lottery;
 import com.spring.model.LotteryStatus;
 import com.spring.repository.LotteryRepository;
@@ -32,30 +31,20 @@ public class LotteryServiceImpl implements LotteryService
 
 
     @Override
-    public Lottery findById(Long lotteryId)
+    public Lottery findById(Long lotteryId) throws ResourceNotFoundException
     {
-        try
-        {
-            Optional<Lottery> lottery = lotteryRepository.findById(lotteryId.toString());
-            return lottery.get();
-
-        } catch(NoSuchElementException e) {
-            // do something with the exception
-        }
-
-        return new Lottery();
+        return lotteryRepository.findById(lotteryId.toString())
+                .orElseThrow(() -> new ResourceNotFoundException("Lottery not found for this id :: " + lotteryId));
     }
 
     @Override
-    public void endLotteryByDateAndId(Date date, Long id)
+    public void endLotteryByDateAndId(Date date, Long id) throws ResourceNotFoundException
     {
-        Lottery lottery = lotteryRepository.findLotteryByDateAndId(date, id);
+        Lottery lottery = lotteryRepository.findLotteryByDateAndId(date, id)
+        .orElseThrow(() -> new ResourceNotFoundException("Lottery not found for this id  :: " + id + " and date :: " + date));
+
         lottery.setStatus(LotteryStatus.PASSIVE);
-        try {
-            lotteryRepository.save(lottery);
-        } catch(Exception ex){
-            //throw new UnableToSaveException("unknown error");
-        }
+        lotteryRepository.save(lottery);
     }
 
 }

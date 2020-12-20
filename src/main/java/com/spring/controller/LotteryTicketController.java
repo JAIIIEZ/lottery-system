@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.spring.exception.ResourceNotFoundException;
 import com.spring.model.Lottery;
 import com.spring.model.User;
 import com.spring.service.LotteryTicketService;
@@ -16,7 +17,8 @@ public class LotteryTicketController
     LotteryTicketService lotteryTicketService;
 
     @PostMapping
-    public boolean submitTicket(@ModelAttribute("userForm") User userForm, @ModelAttribute("lottery") Lottery lottery) {
+    public boolean submitTicket(@ModelAttribute("userForm") User userForm, @ModelAttribute("lottery") Lottery lottery) throws ResourceNotFoundException
+    {
         return lotteryTicketService.submitLotteryTicket(userForm.getId(), lottery.getId());
     }
 }

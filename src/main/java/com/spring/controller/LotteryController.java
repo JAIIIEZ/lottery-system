@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.spring.exception.ResourceNotFoundException;
 import com.spring.model.Lottery;
 import com.spring.model.LotteryResult;
 import com.spring.service.LotteryResultService;
@@ -29,7 +30,8 @@ public class LotteryController
     // at 12:00 AM every day
     @Scheduled(cron="0 0 0 * * ?")
     @PostMapping
-    public void endLotteryAndSelectRandomLotteryWinner(Lottery lottery) {
+    public void endLotteryAndSelectRandomLotteryWinner(Lottery lottery) throws ResourceNotFoundException
+    {
         Date yesterday = DateUtils.yesterday();
         lotteryService.endLotteryByDateAndId(yesterday, lottery.getId());
         Long winnerLotteryNumber = lotteryTicketService.selectRandomLotteryWinner(lottery.getId());
