@@ -15,7 +15,6 @@ import com.spring.utils.DateUtils;
 @Service
 public class LotteryServiceImpl implements LotteryService
 {
-
     @Autowired
     private LotteryRepository lotteryRepository;
 

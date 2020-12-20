@@ -52,7 +52,7 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
 
         SecureRandom rand = new SecureRandom();
         int random = rand.nextInt(count.intValue());
-        LotteryTicket ticket = lotteryTicketRepository.findByLotteryNumberAndLotteryId(Long.valueOf(random + 1), lotteryId);
+        LotteryTicket ticket = lotteryTicketRepository.findByLotteryNumberAndLotteryId(random + 1L, lotteryId);
         if (ticket == null) {
             throw new ResourceNotFoundException("Lottery ticket couldn't find for this lottery number :: " + random + 1);
         }
