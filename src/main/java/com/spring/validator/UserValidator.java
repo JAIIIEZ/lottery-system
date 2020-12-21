@@ -6,6 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import com.spring.dto.UserDto;
 import com.spring.model.User;
 import com.spring.service.UserService;
 
@@ -22,20 +23,20 @@ public class UserValidator implements Validator
 
     @Override
     public void validate(Object o, Errors errors) {
-        User user = (User) o;
+        UserDto userDto = (UserDto) o;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");
 
-        if (userService.findByEmail(user.getEmail()) != null) {
-            errors.rejectValue("email", "Duplicate.userForm.email");
+        if (userService.findByUsername(userDto.getUsername()) != null) {
+            errors.rejectValue("username", "Duplicate.userForm.username");
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
-        if (user.getPassword().length() < 6 || user.getPassword().length() > 32) {
+        if (userDto.getPassword().length() < 6 || userDto.getPassword().length() > 32) {
             errors.rejectValue("password", "Size.userForm.password");
         }
 
-        if (!user.getPasswordConfirm().equals(user.getPassword())) {
+        if (!userDto.getPasswordConfirm().equals(userDto.getPassword())) {
             errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
         }
     }

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,11 +28,13 @@ public class LotteryResult implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private Date date;
 
+    @Column(unique=true, nullable = false)
     private Long lotteryId;
 
+    @NotEmpty
     private Long winnerLotteryNumber;
 
     public LotteryResult(Date date, Long lotteryId, Long winnerLotteryNumber)

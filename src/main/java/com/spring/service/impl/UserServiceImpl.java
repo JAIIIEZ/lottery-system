@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.spring.dto.UserDto;
 import com.spring.model.Role;
 import com.spring.model.User;
 import com.spring.repository.UserRepository;
@@ -21,15 +22,19 @@ public class UserServiceImpl implements UserService
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public User findByEmail(String email)
+    public User findByUsername(String username)
     {
-        return userRepository.findByEmail(email);
+        return userRepository.findByUsername(username);
     }
 
     @Override
-    public User createUser(User user)
+    public User createUser(UserDto userDto)
     {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         user.setRole(Arrays.asList(new Role("ADMIN")));
         return userRepository.save(user);
     }

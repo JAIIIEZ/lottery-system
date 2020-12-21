@@ -19,7 +19,7 @@ public final class DateUtils
         return calendar.getTime();
     }
 
-    public static Date atStartOfDay(Date date) {
+    public static Date atBeginningOfDay(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 0);

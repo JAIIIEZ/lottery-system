@@ -1,11 +1,12 @@
 package com.spring.service;
 
+import com.spring.dto.UserDto;
 import com.spring.model.User;
 
 public interface UserService {
 
-    User findByEmail(String email);
+    User findByUsername(String username);
 
-    User createUser(User user);
+    User createUser(UserDto userDto);
 
 }

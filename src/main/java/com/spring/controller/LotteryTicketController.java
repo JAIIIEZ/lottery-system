@@ -1,24 +1,24 @@
 package com.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.exception.ResourceNotFoundException;
-import com.spring.model.Lottery;
-import com.spring.model.User;
+import com.spring.exception.UnableToSubmitLotteryTicket;
+import com.spring.model.LotteryTicket;
 import com.spring.service.LotteryTicketService;
 
-@Controller
+@RestController("/lotteryTicket")
 public class LotteryTicketController
 {
     @Autowired
-    LotteryTicketService lotteryTicketService;
+    private LotteryTicketService lotteryTicketService;
 
     @PostMapping
-    public boolean submitTicket(@ModelAttribute("userForm") User userForm, @ModelAttribute("lottery") Lottery lottery) throws ResourceNotFoundException
+    public LotteryTicket submitTicket(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
     {
-        return lotteryTicketService.submitLotteryTicket(userForm.getId(), lottery.getId());
+        return lotteryTicketService.submitLotteryTicket(lotteryId);
     }
 }

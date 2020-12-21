@@ -1,7 +1,10 @@
 package com.spring.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +13,6 @@ import com.spring.model.Lottery;
 import com.spring.model.LotteryStatus;
 import com.spring.repository.LotteryRepository;
 import com.spring.service.LotteryService;
-import com.spring.utils.DateUtils;
 
 @Service
 public class LotteryServiceImpl implements LotteryService
@@ -18,13 +20,15 @@ public class LotteryServiceImpl implements LotteryService
     @Autowired
     private LotteryRepository lotteryRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(LotteryServiceImpl.class);
+
     @Override
-    public Lottery startLottery(String lotteryName)
+    public Lottery startLotteryByName(String lotteryName)
     {
         Lottery lottery = new Lottery();
         lottery.setName(lotteryName);
         lottery.setStatus(LotteryStatus.ACTIVE);
-        lottery.setDate(DateUtils.atStartOfDay(new Date()));
+        lottery.setDate(new Date());
         return lotteryRepository.save(lottery);
     }
 
@@ -32,18 +36,29 @@ public class LotteryServiceImpl implements LotteryService
     @Override
     public Lottery findById(Long lotteryId) throws ResourceNotFoundException
     {
-        return lotteryRepository.findById(lotteryId.toString())
-                .orElseThrow(() -> new ResourceNotFoundException("Lottery not found for this id :: " + lotteryId));
+        Lottery lottery =  lotteryRepository.findById(lotteryId);
+        if (lottery == null) {
+            throw new ResourceNotFoundException("Lottery not found for this id :: " + lotteryId);
+        }
+        return lottery;
     }
 
     @Override
-    public void endLotteryByDateAndId(Date date, Long id) throws ResourceNotFoundException
+    public void endLotteryById(Long lotteryId) throws ResourceNotFoundException
     {
-        Lottery lottery = lotteryRepository.findLotteryByDateAndId(date, id)
-        .orElseThrow(() -> new ResourceNotFoundException("Lottery not found for this id  :: " + id + " and date :: " + date));
-
-        lottery.setStatus(LotteryStatus.PASSIVE);
-        lotteryRepository.save(lottery);
+        Lottery lottery = findById(lotteryId);
+        if (LotteryStatus.PASSIVE.equals(lottery.getStatus())) {
+            logger.info("Lottery id {} is already passive!", lotteryId);
+        } else {
+            lottery.setStatus(LotteryStatus.PASSIVE);
+            lotteryRepository.save(lottery);
+        }
     }
+
+    @Override
+    public List<Lottery> getActiveLotteries() {
+        return lotteryRepository.findLotteriesByStatus(LotteryStatus.ACTIVE);
+    }
+
 
 }

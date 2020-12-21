@@ -26,8 +26,8 @@ public class LotteryTicket implements Serializable
     @Column(name = "lottery_id")
     private Long lotteryId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "lottery_num")
     private Long lotteryNumber;

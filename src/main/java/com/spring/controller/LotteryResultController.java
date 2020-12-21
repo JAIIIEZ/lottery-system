@@ -1,24 +1,24 @@
 package com.spring.controller;
 
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.spring.dto.LotteryResultDto;
 import com.spring.exception.ResourceNotFoundException;
+import com.spring.model.LotteryResult;
 import com.spring.service.LotteryResultService;
 
-@Controller
+@RestController("/lotteryResult")
 public class LotteryResultController
 {
     @Autowired
     private LotteryResultService lotteryResultService;
 
-    @GetMapping
-    public LotteryResultDto getLotteryResultsByDateAndLotteryId(Date lotteryDate, Long lotteryId) throws ResourceNotFoundException
+    @GetMapping("/{lotteryId}/results")
+    public LotteryResult getLotteryResultsByDateAndLotteryId(@PathVariable Long lotteryId) throws ResourceNotFoundException
     {
-        return lotteryResultService.getLotteryResultByDateAndLotteryId(lotteryDate, lotteryId);
+        return lotteryResultService.getLotteryResultByLotteryId(lotteryId);
     }
 }

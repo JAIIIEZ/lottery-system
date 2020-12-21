@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import lombok.Getter;
@@ -22,10 +21,9 @@ public class User implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email
     @NotEmpty
-    @Column(name = "email")
-    private String email;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "first_name")
     private String firstName;
@@ -36,12 +34,9 @@ public class User implements Serializable
     @NotEmpty
     private String password;
 
-    @Transient
-    private String passwordConfirm;
-
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "USER_ROLES", joinColumns = {
-            @JoinColumn(name = "USER_EMAIL", referencedColumnName = "email")}, inverseJoinColumns = {
+            @JoinColumn(name = "USER_USERNAME", referencedColumnName = "username")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_NAME", referencedColumnName = "name") })
     private List<Role> role;
 

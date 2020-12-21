@@ -9,7 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import com.spring.model.User;
+
+import com.spring.dto.UserDto;
 import com.spring.service.SecurityService;
 import com.spring.service.UserService;
 import com.spring.validator.UserValidator;
@@ -28,13 +29,13 @@ public class UserController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("userForm", new User());
+        model.addAttribute("userForm", new UserDto());
 
         return "registration";
     }
 
     @PostMapping("/registration")
-    public String registration(@Valid @ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+    public String registration(@ModelAttribute("userForm") @Valid UserDto userForm, BindingResult bindingResult) {
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
@@ -43,7 +44,7 @@ public class UserController {
 
         userService.createUser(userForm);
 
-        securityService.autoLogin(userForm.getEmail(), userForm.getPasswordConfirm());
+        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
 
         return "redirect:/welcome";
     }
@@ -51,7 +52,7 @@ public class UserController {
     @GetMapping("/login")
     public String login(Model model, String error, String logout) {
         if (error != null)
-            model.addAttribute("error", "Your email and password is invalid.");
+            model.addAttribute("error", "Your username and password is invalid.");
 
         if (logout != null)
             model.addAttribute("message", "You have been logged out successfully.");
