@@ -19,6 +19,6 @@ public class LotteryTicketController
     @PostMapping
     public LotteryTicket submitTicket(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
     {
-        return lotteryTicketService.submitLotteryTicket(lotteryId);
+        return lotteryTicketService.submitLotteryTicketSync(lotteryId);
     }
 }

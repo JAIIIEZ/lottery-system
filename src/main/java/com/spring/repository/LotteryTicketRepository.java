@@ -9,6 +9,8 @@ import com.spring.model.LotteryTicket;
 public interface LotteryTicketRepository extends JpaRepository<LotteryTicket, Long>
 {
     LotteryTicket findFirstByLotteryIdOrderByLotteryNumberDesc(Long lotteryId);
+
     Long countLotteryTicketByLotteryId(Long lotteryId);
+
     LotteryTicket findByLotteryNumberAndLotteryId(Long lotteryNumber, Long lotteryId);
 }

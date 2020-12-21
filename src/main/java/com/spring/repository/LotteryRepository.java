@@ -12,5 +12,8 @@ import com.spring.model.LotteryStatus;
 public interface LotteryRepository extends JpaRepository<Lottery, String>
 {
     List<Lottery> findLotteriesByStatus(LotteryStatus status);
+
     Lottery findById(Long id);
+
+    Long countByNameAndStatus(String name, LotteryStatus status);
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.exception.ResourceNotFoundException;
+import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
 import com.spring.model.LotteryStatus;
 import com.spring.repository.LotteryRepository;
@@ -23,8 +24,10 @@ public class LotteryServiceImpl implements LotteryService
     private static final Logger logger = LoggerFactory.getLogger(LotteryServiceImpl.class);
 
     @Override
-    public Lottery startLotteryByName(String lotteryName)
+    public Lottery startLotteryByName(String lotteryName) throws UnableToSaveException
     {
+        checkActiveLotteryWithSameName(lotteryName);
+
         Lottery lottery = new Lottery();
         lottery.setName(lotteryName);
         lottery.setStatus(LotteryStatus.ACTIVE);
@@ -38,7 +41,7 @@ public class LotteryServiceImpl implements LotteryService
     {
         Lottery lottery =  lotteryRepository.findById(lotteryId);
         if (lottery == null) {
-            throw new ResourceNotFoundException("Lottery not found for this id :: " + lotteryId);
+            throw new IllegalArgumentException("Lottery not found for this id :: " + lotteryId);
         }
         return lottery;
     }
@@ -60,5 +63,13 @@ public class LotteryServiceImpl implements LotteryService
         return lotteryRepository.findLotteriesByStatus(LotteryStatus.ACTIVE);
     }
 
+    public void checkActiveLotteryWithSameName(String lotteryName) throws UnableToSaveException
+    {
+        Long count = lotteryRepository.countByNameAndStatus(lotteryName, LotteryStatus.ACTIVE);
+
+        if (count > 0) {
+            throw new UnableToSaveException("There is already active lottery by this name :: " + lotteryName);
+        }
+    }
 
 }

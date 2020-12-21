@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.model.LotteryResult;
-import com.spring.utils.DateUtils;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -53,16 +52,6 @@ public class LotteryResultServiceTest
     }
 
     private LotteryResult createLotteryResult(Long lotteryId) {
-        LotteryResult result = generateLotteryResult(lotteryId);
-        return lotteryResultService.saveLotteryResult(result);
+        return lotteryResultService.saveLotteryResult(lotteryId, 3L);
     }
-
-    private LotteryResult generateLotteryResult(Long lotteryId) {
-        LotteryResult result = new LotteryResult();
-        result.setLotteryId(lotteryId);
-        result.setWinnerLotteryNumber(3L);
-        result.setDate(DateUtils.yesterday());
-        return result;
-    }
-
 }

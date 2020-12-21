@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "lottery_tickets")
+@Table(name = "lottery_ticket")
 public class LotteryTicket implements Serializable
 {
     private static final long serialVersionUID = -1505299657602326790L;

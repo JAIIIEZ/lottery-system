@@ -16,7 +16,7 @@ public class LotteryResultController
     @Autowired
     private LotteryResultService lotteryResultService;
 
-    @GetMapping("/{lotteryId}/results")
+    @GetMapping("/{lotteryId}")
     public LotteryResult getLotteryResultsByDateAndLotteryId(@PathVariable Long lotteryId) throws ResourceNotFoundException
     {
         return lotteryResultService.getLotteryResultByLotteryId(lotteryId);

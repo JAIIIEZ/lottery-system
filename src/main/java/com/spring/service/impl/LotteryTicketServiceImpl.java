@@ -1,6 +1,7 @@
 package com.spring.service.impl;
 
 import java.security.SecureRandom;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import com.spring.service.LotteryResultService;
 import com.spring.service.LotteryService;
 import com.spring.service.LotteryTicketService;
 import com.spring.service.SecurityService;
+import com.spring.utils.DateUtils;
 
 @Service
 public class LotteryTicketServiceImpl implements LotteryTicketService
@@ -38,14 +40,16 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
     private static final Logger logger = LoggerFactory.getLogger(LotteryTicketServiceImpl.class);
 
     @Override
-    public LotteryTicket submitLotteryTicket(Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket {
-        String username = securityService.findLoggedInUsername();
-        return submitLotteryTicketByUsername(username, lotteryId);
+    public LotteryTicket submitLotteryTicketSync(Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
+    {
+        synchronized (this) {
+            return submitLotteryTicketByLotteryId(lotteryId);
+        }
     }
 
     @Override
-    public LotteryTicket submitLotteryTicketByUsername(String username, Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
-    {
+    public LotteryTicket submitLotteryTicketByLotteryId(Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket {
+        String username = securityService.findLoggedInUsername();
         Lottery lottery = lotteryService.findById(lotteryId);
 
         lotteryStatusCheck(lottery);
@@ -79,8 +83,7 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
         return ticket == null ? 1L : ticket.getLotteryNumber() + 1;
     }
 
-    @Override
-    public Long selectRandomLotteryWinner(Long lotteryId) throws ResourceNotFoundException
+    private Long selectRandomLotteryWinner(Long lotteryId) throws ResourceNotFoundException
     {
         checkLotteryWinnerAlreadyExist(lotteryId);
 
@@ -93,6 +96,20 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
         }
         return ticket.getLotteryNumber();
     }
+
+    @Override
+    public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException
+    {
+        lotteryService.endLotteryById(lotteryId);
+        Long winnerLotteryNum = selectRandomLotteryWinner(lotteryId);
+        saveLotteryResultByLotteryId(lotteryId, winnerLotteryNum);
+    }
+
+    private void saveLotteryResultByLotteryId(Long lotteryId, Long winnerLotteryNum)
+    {
+        lotteryResultService.saveLotteryResult(lotteryId, winnerLotteryNum);
+    }
+
 
     private long getRandom(Long count)
     {
