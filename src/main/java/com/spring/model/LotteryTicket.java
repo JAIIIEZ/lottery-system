@@ -1,6 +1,7 @@
 package com.spring.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,4 +32,7 @@ public class LotteryTicket implements Serializable
 
     @Column(name = "lottery_num")
     private Long lotteryNumber;
+
+    @Column(name = "date")
+    private Date date;
 }

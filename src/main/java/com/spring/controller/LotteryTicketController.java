@@ -18,9 +18,9 @@ public class LotteryTicketController
     @Autowired
     private LotteryTicketService lotteryTicketService;
 
-    @PostMapping("submitLottery/{lotteryId}")
-    public LotteryTicket submitLottery(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
+    @PostMapping("submitLottery/{lotteryId}/{username}")
+    public LotteryTicket submitLottery(@PathVariable("lotteryId") Long lotteryId, @PathVariable("username") String username) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
     {
-        return lotteryTicketService.submitLotteryTicketSync(lotteryId);
+        return lotteryTicketService.submitLotteryTicketSync(lotteryId, username);
     }
 }

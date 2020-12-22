@@ -13,4 +13,5 @@ public interface LotteryTicketRepository extends JpaRepository<LotteryTicket, Lo
     Long countLotteryTicketByLotteryId(Long lotteryId);
 
     LotteryTicket findByLotteryNumberAndLotteryId(Long lotteryNumber, Long lotteryId);
+
 }

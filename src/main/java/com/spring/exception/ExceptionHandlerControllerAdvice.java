@@ -56,4 +56,15 @@ public class ExceptionHandlerControllerAdvice
         return new ResponseEntity<>(errorDetails, HttpStatus.ALREADY_REPORTED);
     }
 
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<?> handleValidationExceptions(UserAlreadyExistException ex, WebRequest request) {
+        ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(LotteryAlreadyPassiveException.class)
+    public ResponseEntity<?> handleValidationExceptions(LotteryAlreadyPassiveException ex, WebRequest request) {
+        ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
 }

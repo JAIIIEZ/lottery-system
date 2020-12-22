@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.exception.LotteryAlreadyPassiveException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
@@ -31,7 +32,7 @@ public class LotteryController
     }
 
     @PostMapping("/endLotteryAndSelectRandomLotteryWinner/{lotteryId}")
-    public void endLotteryAndSelectRandomLotteryWinner(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException
+    public void endLotteryAndSelectRandomLotteryWinner(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException
     {
         if (!isEligibleLotteryId(lotteryId)) {
             throw new ResourceNotFoundException("Lottery id not found :: " + lotteryId);

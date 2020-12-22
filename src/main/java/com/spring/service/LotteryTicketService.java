@@ -6,9 +6,7 @@ import com.spring.model.LotteryTicket;
 
 public interface LotteryTicketService
 {
-    LotteryTicket submitLotteryTicketByLotteryId(Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket;
-
-    LotteryTicket submitLotteryTicketSync(Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket;
+    LotteryTicket submitLotteryTicketSync(Long lotteryId, String username) throws ResourceNotFoundException, UnableToSubmitLotteryTicket;
 
     void selectRandomLotteryWinnerAndSaveResult(Long lotteryId) throws ResourceNotFoundException;
 }

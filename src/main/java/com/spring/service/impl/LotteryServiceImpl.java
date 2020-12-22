@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.exception.LotteryAlreadyPassiveException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
@@ -39,34 +40,26 @@ public class LotteryServiceImpl implements LotteryService
         return lotteryRepository.save(lottery);
     }
 
+    public void checkActiveLotteryWithSameName(String lotteryName) throws UnableToSaveException
+    {
+        Long count = lotteryRepository.countByNameAndStatus(lotteryName, LotteryStatus.ACTIVE);
+
+        if (count > 0)
+        {
+            throw new UnableToSaveException("There is already active lottery by this name :: " + lotteryName);
+        }
+    }
+
 
     @Override
     public Lottery findById(Long lotteryId)
     {
-        Lottery lottery =  lotteryRepository.findById(lotteryId);
-        if (lottery == null) {
+        Lottery lottery = lotteryRepository.findById(lotteryId);
+        if (lottery == null)
+        {
             throw new IllegalArgumentException("Lottery not found for this id :: " + lotteryId);
         }
         return lottery;
-    }
-
-    @Override
-    public void endLotteryById(Long lotteryId)
-    {
-        Lottery lottery = findById(lotteryId);
-        if (LotteryStatus.PASSIVE.equals(lottery.getStatus())) {
-            logger.info("Lottery id {} is already passive!", lotteryId);
-        } else {
-            lottery.setStatus(LotteryStatus.PASSIVE);
-            lotteryRepository.save(lottery);
-        }
-    }
-
-    @Override
-    public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException
-    {
-        endLotteryById(lotteryId);
-        lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lotteryId);
     }
 
     @Override
@@ -78,27 +71,38 @@ public class LotteryServiceImpl implements LotteryService
             {
                 endLotteryAndSelectLotteryWinner(lottery.getId());
             }
-            catch (ResourceNotFoundException e)
+            catch (ResourceNotFoundException | LotteryAlreadyPassiveException e)
             {
                 logger.error("Lottery couldn't end for that id {} , error: {} ", lottery.getId(), e.getMessage());
             }
         });
     }
 
-
-
     @Override
-    public List<Lottery> getActiveLotteries() {
-        return lotteryRepository.findLotteriesByStatus(LotteryStatus.ACTIVE);
+    public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException
+    {
+        endLotteryById(lotteryId);
+        lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lotteryId);
     }
 
-    public void checkActiveLotteryWithSameName(String lotteryName) throws UnableToSaveException
+    private void endLotteryById(Long lotteryId) throws LotteryAlreadyPassiveException
     {
-        Long count = lotteryRepository.countByNameAndStatus(lotteryName, LotteryStatus.ACTIVE);
-
-        if (count > 0) {
-            throw new UnableToSaveException("There is already active lottery by this name :: " + lotteryName);
+        Lottery lottery = findById(lotteryId);
+        if (LotteryStatus.PASSIVE.equals(lottery.getStatus()))
+        {
+            throw new LotteryAlreadyPassiveException("Lottery id is already passive! :: " + lotteryId);
         }
+        else
+        {
+            lottery.setStatus(LotteryStatus.PASSIVE);
+            lotteryRepository.save(lottery);
+        }
+    }
+
+    @Override
+    public List<Lottery> getActiveLotteries()
+    {
+        return lotteryRepository.findLotteriesByStatus(LotteryStatus.ACTIVE);
     }
 
 }

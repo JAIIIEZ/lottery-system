@@ -7,8 +7,11 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.spring.dto.UserDto;
+import com.spring.exception.UserAlreadyExistException;
 import com.spring.model.User;
 import com.spring.service.UserService;
+
+import lombok.SneakyThrows;
 
 @Component
 public class UserValidator implements Validator
@@ -21,6 +24,7 @@ public class UserValidator implements Validator
         return User.class.equals(aClass);
     }
 
+    @SneakyThrows
     @Override
     public void validate(Object o, Errors errors) {
         UserDto userDto = (UserDto) o;
@@ -29,6 +33,7 @@ public class UserValidator implements Validator
 
         if (userService.findByUsername(userDto.getUsername()) != null) {
             errors.rejectValue("username", "Duplicate.userForm.username");
+            throw new UserAlreadyExistException(userDto.getUsername());
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");

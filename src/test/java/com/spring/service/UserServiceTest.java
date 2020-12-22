@@ -23,7 +23,8 @@ public class UserServiceTest
     private UserService userService;
 
     @Test
-    public void givenNewUser_whenRegistered_thenCorrect() {
+    public void givenNewUser_whenRegistered_thenCorrect()
+    {
         final String username = UUID.randomUUID().toString();
         final UserDto userDto = createUserDto(username);
 
@@ -37,11 +38,13 @@ public class UserServiceTest
 
     @Transactional
     @Test
-    public void givenDetachedUser_whenServiceLoadById_thenCorrect() {
+    public void givenDetachedUser_whenServiceLoadById_thenCorrect()
+    {
         final User user = registerUser();
         final User user2 = userService.findByUsername(user.getUsername());
         assertEquals(user, user2);
     }
+
 
     private UserDto createUserDto(final String username) {
         final UserDto userDto = new UserDto();
@@ -53,7 +56,8 @@ public class UserServiceTest
         return userDto;
     }
 
-    private User registerUser() {
+    private User registerUser()
+    {
         final String username = UUID.randomUUID().toString();
         final UserDto userDto = createUserDto(username);
         final User user = userService.createUser(userDto);
