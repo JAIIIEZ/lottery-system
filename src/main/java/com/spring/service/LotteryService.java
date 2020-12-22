@@ -15,4 +15,8 @@ public interface LotteryService
     Lottery findById(Long lotteryId) throws ResourceNotFoundException;
 
     List<Lottery> getActiveLotteries();
+
+    void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException;
+
+    void endActiveLotteriesAndSelectLotteryWinners() throws ResourceNotFoundException;
 }

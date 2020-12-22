@@ -1,7 +1,6 @@
 package com.spring.service.impl;
 
 import java.security.SecureRandom;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ import com.spring.service.LotteryResultService;
 import com.spring.service.LotteryService;
 import com.spring.service.LotteryTicketService;
 import com.spring.service.SecurityService;
-import com.spring.utils.DateUtils;
 
 @Service
 public class LotteryTicketServiceImpl implements LotteryTicketService
@@ -83,6 +81,13 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
         return ticket == null ? 1L : ticket.getLotteryNumber() + 1;
     }
 
+    @Override
+    public void selectRandomLotteryWinnerAndSaveResult(Long lotteryId) throws ResourceNotFoundException
+    {
+        Long winnerLotteryNum = selectRandomLotteryWinner(lotteryId);
+        saveLotteryResultByLotteryId(lotteryId, winnerLotteryNum);
+    }
+
     private Long selectRandomLotteryWinner(Long lotteryId) throws ResourceNotFoundException
     {
         checkLotteryWinnerAlreadyExist(lotteryId);
@@ -97,19 +102,10 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
         return ticket.getLotteryNumber();
     }
 
-    @Override
-    public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException
-    {
-        lotteryService.endLotteryById(lotteryId);
-        Long winnerLotteryNum = selectRandomLotteryWinner(lotteryId);
-        saveLotteryResultByLotteryId(lotteryId, winnerLotteryNum);
-    }
-
     private void saveLotteryResultByLotteryId(Long lotteryId, Long winnerLotteryNum)
     {
         lotteryResultService.saveLotteryResult(lotteryId, winnerLotteryNum);
     }
-
 
     private long getRandom(Long count)
     {
@@ -121,7 +117,7 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
     {
         LotteryResult result = lotteryResultService.getLotteryResultByLotteryId(lotteryId);
         if (result != null) {
-            throw new RuntimeException("This lottery id alread has winner :: " + lotteryId);
+            throw new ResourceNotFoundException("This lottery id alread has winner :: " + lotteryId);
         }
     }
 }

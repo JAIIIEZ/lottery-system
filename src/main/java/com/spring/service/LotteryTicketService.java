@@ -10,5 +10,5 @@ public interface LotteryTicketService
 
     LotteryTicket submitLotteryTicketSync(Long lotteryId) throws ResourceNotFoundException, UnableToSubmitLotteryTicket;
 
-    void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException;
+    void selectRandomLotteryWinnerAndSaveResult(Long lotteryId) throws ResourceNotFoundException;
 }

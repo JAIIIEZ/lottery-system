@@ -14,12 +14,16 @@ import com.spring.model.Lottery;
 import com.spring.model.LotteryStatus;
 import com.spring.repository.LotteryRepository;
 import com.spring.service.LotteryService;
+import com.spring.service.LotteryTicketService;
 
 @Service
 public class LotteryServiceImpl implements LotteryService
 {
     @Autowired
     private LotteryRepository lotteryRepository;
+
+    @Autowired
+    private LotteryTicketService lotteryTicketService;
 
     private static final Logger logger = LoggerFactory.getLogger(LotteryServiceImpl.class);
 
@@ -37,7 +41,7 @@ public class LotteryServiceImpl implements LotteryService
 
 
     @Override
-    public Lottery findById(Long lotteryId) throws ResourceNotFoundException
+    public Lottery findById(Long lotteryId)
     {
         Lottery lottery =  lotteryRepository.findById(lotteryId);
         if (lottery == null) {
@@ -47,7 +51,7 @@ public class LotteryServiceImpl implements LotteryService
     }
 
     @Override
-    public void endLotteryById(Long lotteryId) throws ResourceNotFoundException
+    public void endLotteryById(Long lotteryId)
     {
         Lottery lottery = findById(lotteryId);
         if (LotteryStatus.PASSIVE.equals(lottery.getStatus())) {
@@ -57,6 +61,31 @@ public class LotteryServiceImpl implements LotteryService
             lotteryRepository.save(lottery);
         }
     }
+
+    @Override
+    public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException
+    {
+        endLotteryById(lotteryId);
+        lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lotteryId);
+    }
+
+    @Override
+    public void endActiveLotteriesAndSelectLotteryWinners()
+    {
+        List<Lottery> lotteries = getActiveLotteries();
+        lotteries.stream().forEach(lottery -> {
+            try
+            {
+                endLotteryAndSelectLotteryWinner(lottery.getId());
+            }
+            catch (ResourceNotFoundException e)
+            {
+                logger.error("Lottery couldn't end for that id {} , error: {} ", lottery.getId(), e.getMessage());
+            }
+        });
+    }
+
+
 
     @Override
     public List<Lottery> getActiveLotteries() {
