@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LotteryResultDto
 {
-    private Date date;
-    private String lotteryName;
-    private Long winnerLotteryNumber;
+    private String date;
+    private String winnerLotteryNumber;
 }

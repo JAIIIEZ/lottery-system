@@ -1,11 +1,13 @@
 package com.spring.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.tomcat.util.buf.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.spring.dto.LotteryResultDto;
 import com.spring.dto.UserDto;
 import com.spring.exception.LotteryAlreadyPassiveException;
 import com.spring.exception.ResourceNotFoundException;
@@ -156,9 +159,9 @@ public class LotteryTicketServiceTest
         generateMultiThreadSubmitLottery(lottery.getId());
         lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lottery.getId());
 
-        LotteryResult result = lotteryResultService.getLotteryResultByLotteryId(lottery.getId());
+        LotteryResultDto result = lotteryResultService.getLotteryResultByLotteryId(lottery.getId());
         assertNotNull(result);
-        Assert.assertNotEquals(result.getWinnerLotteryNumber().longValue(), -1L);
+        Assert.assertTrue(isNumeric(result.getWinnerLotteryNumber()));
     }
 
     @Test
@@ -169,8 +172,8 @@ public class LotteryTicketServiceTest
 
         lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lottery.getId());
 
-        LotteryResult result = lotteryResultService.getLotteryResultByLotteryId(lottery.getId());
-        Assert.assertEquals(result.getWinnerLotteryNumber().longValue(),-1L);
+        LotteryResultDto result = lotteryResultService.getLotteryResultByLotteryId(lottery.getId());
+        Assert.assertFalse(isNumeric(result.getWinnerLotteryNumber()));
     }
 
     private void createUser(final String username) {
@@ -181,5 +184,9 @@ public class LotteryTicketServiceTest
         userDto.setFirstName("Merve");
         userDto.setLastName("Kaygisiz");
         userService.createUser(userDto);
+    }
+
+    public static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");
     }
 }

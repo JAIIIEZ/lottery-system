@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.dto.LotteryResultDto;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.model.LotteryResult;
 
@@ -40,15 +41,15 @@ public class LotteryResultServiceTest
     public void shouldGiveLotteryResult_WhenLotteryIdIsValid() throws ResourceNotFoundException
     {
         final LotteryResult result = createLotteryResult(67L);
-        final LotteryResult result2 = lotteryResultService.getLotteryResultByLotteryId(67L);
+        final LotteryResultDto result2 = lotteryResultService.getLotteryResultByLotteryId(67L);
 
-        assertEquals(result, result2);
+        assertEquals(result.getWinnerLotteryNumber().toString(), result2.getWinnerLotteryNumber());
     }
 
     @Transactional
     @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowException_WhenLotteryIdIsInvalid() throws ResourceNotFoundException {
-        LotteryResult result = lotteryResultService.getLotteryResultByLotteryId(null);
+        LotteryResultDto result = lotteryResultService.getLotteryResultByLotteryId(null);
     }
 
     private LotteryResult createLotteryResult(Long lotteryId) {
