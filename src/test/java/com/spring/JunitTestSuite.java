@@ -27,6 +27,5 @@ import com.spring.service.UserServiceTest;
         UserServiceTest.class,
         UserControllerTest.class
 })
-public class JunitTestSuite
-{
+public class JunitTestSuite {
 }

@@ -16,13 +16,13 @@ import com.spring.model.LotteryTicket;
 @Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class LotteryTicketRepositoryTest
-{
+public class LotteryTicketRepositoryTest {
+
     @Autowired
     private LotteryTicketRepository lotteryTicketRepository;
 
     @Before
-    public void initEach(){
+    public void initEach() {
         lotteryTicketRepository.deleteAll();
     }
 

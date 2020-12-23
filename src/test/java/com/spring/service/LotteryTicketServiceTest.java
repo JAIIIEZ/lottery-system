@@ -1,13 +1,11 @@
 package com.spring.service;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.tomcat.util.buf.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,11 +18,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.spring.dto.LotteryResultDto;
 import com.spring.dto.UserDto;
 import com.spring.exception.LotteryAlreadyPassiveException;
+import com.spring.exception.LotteryIsNotFinishException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.exception.UnableToSubmitLotteryTicket;
 import com.spring.model.Lottery;
-import com.spring.model.LotteryResult;
 import com.spring.model.LotteryTicket;
 import com.spring.repository.LotteryRepository;
 import com.spring.repository.LotteryTicketRepository;
@@ -33,8 +31,8 @@ import com.spring.repository.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class LotteryTicketServiceTest
-{
+public class LotteryTicketServiceTest {
+
     @Autowired
     private LotteryTicketService lotteryTicketService;
 
@@ -59,15 +57,14 @@ public class LotteryTicketServiceTest
     private final static int NUM_THREADS = 1000;
 
     @Before
-    public void initEach(){
+    public void initEach() {
         lotteryRepository.deleteAll();
         userRepository.deleteAll();
         lotteryTicketRepository.deleteAll();
     }
 
     @Test
-    public void shouldSubmitLotteryTicket() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket
-    {
+    public void shouldSubmitLotteryTicket() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("mervekaygisiz");
 
@@ -77,8 +74,7 @@ public class LotteryTicketServiceTest
     }
 
     @Test
-    public void shouldSubmitManyLotteryTicket() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket
-    {
+    public void shouldSubmitManyLotteryTicket() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("mervekaygisiz");
 
@@ -92,22 +88,19 @@ public class LotteryTicketServiceTest
     }
 
     @Test(expected = UsernameNotFoundException.class)
-    public void shouldThrowException_WhenUsernameIsInvalid() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket
-    {
+    public void shouldThrowException_WhenUsernameIsInvalid() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         lotteryTicketService.submitLotteryTicketSync(lottery.getId(), null);
     }
 
     @Test(expected = UsernameNotFoundException.class)
-    public void shouldThrowException_WhenUsernameIsNotRegistered() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket
-    {
+    public void shouldThrowException_WhenUsernameIsNotRegistered() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         lotteryTicketService.submitLotteryTicketSync(lottery.getId(), "test");
     }
 
     @Test(expected = UnableToSubmitLotteryTicket.class)
-    public void shouldThrowException_WhenLotteryIsFinish() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket, LotteryAlreadyPassiveException
-    {
+    public void shouldThrowException_WhenLotteryIsFinish() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket, LotteryAlreadyPassiveException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
 
@@ -115,8 +108,7 @@ public class LotteryTicketServiceTest
     }
 
     @Test
-    public void givenMultiThread_whenSubmitLotteryTicketSync() throws UnableToSaveException, InterruptedException
-    {
+    public void givenMultiThread_whenSubmitLotteryTicketSync() throws UnableToSaveException, InterruptedException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("mervekaygisiz");
 
@@ -125,22 +117,16 @@ public class LotteryTicketServiceTest
         Assert.assertEquals(lotteryTicketRepository.count(), NUM_THREADS);
     }
 
-    private void generateMultiThreadSubmitLottery(Long lotteryId) throws UnableToSaveException, InterruptedException
-    {
+    private void generateMultiThreadSubmitLottery(Long lotteryId) throws UnableToSaveException, InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
 
         for (int i = 0; i < NUM_THREADS; i++) {
             executor.submit(() -> {
-                try
-                {
+                try {
                     lotteryTicketService.submitLotteryTicketSync(lotteryId, "mervekaygisiz");
-                }
-                catch (ResourceNotFoundException e)
-                {
+                } catch (ResourceNotFoundException e) {
                     e.printStackTrace();
-                }
-                catch (UnableToSubmitLotteryTicket unableToSubmitLotteryTicket)
-                {
+                } catch (UnableToSubmitLotteryTicket unableToSubmitLotteryTicket) {
                     unableToSubmitLotteryTicket.printStackTrace();
                 }
             });
@@ -151,8 +137,7 @@ public class LotteryTicketServiceTest
     }
 
     @Test
-    public void shouldSaveLotteryResult_WhenSelectLotteryWinner() throws UnableToSaveException, ResourceNotFoundException, InterruptedException
-    {
+    public void shouldSaveLotteryResult_WhenSelectLotteryWinner() throws UnableToSaveException, ResourceNotFoundException, InterruptedException, LotteryIsNotFinishException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("mervekaygisiz");
 
@@ -165,8 +150,7 @@ public class LotteryTicketServiceTest
     }
 
     @Test
-    public void shouldSaveLotteryResult_WhenLotteryWinnerNotExist() throws UnableToSaveException, ResourceNotFoundException
-    {
+    public void shouldSaveLotteryResult_WhenLotteryWinnerNotExist() throws UnableToSaveException, ResourceNotFoundException, LotteryIsNotFinishException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("mervekaygisiz");
 

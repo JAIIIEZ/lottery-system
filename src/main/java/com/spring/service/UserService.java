@@ -8,5 +8,4 @@ public interface UserService {
     User findByUsername(String username);
 
     User createUser(UserDto userDto);
-
 }

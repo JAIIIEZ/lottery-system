@@ -1,6 +1,5 @@
 package com.spring.model;
 
-public enum LotteryStatus
-{
+public enum LotteryStatus {
     ACTIVE, PASSIVE
 }

@@ -1,6 +1,5 @@
 package com.spring.service.impl;
 
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Random;
 
@@ -13,19 +12,16 @@ import org.springframework.stereotype.Service;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSubmitLotteryTicket;
 import com.spring.model.Lottery;
-import com.spring.model.LotteryResult;
 import com.spring.model.LotteryStatus;
 import com.spring.model.LotteryTicket;
 import com.spring.repository.LotteryTicketRepository;
 import com.spring.service.LotteryResultService;
 import com.spring.service.LotteryService;
 import com.spring.service.LotteryTicketService;
-import com.spring.service.SecurityService;
 import com.spring.service.UserService;
 
 @Service
-public class LotteryTicketServiceImpl implements LotteryTicketService
-{
+public class LotteryTicketServiceImpl implements LotteryTicketService {
     @Autowired
     private LotteryTicketRepository lotteryTicketRepository;
 
@@ -42,13 +38,11 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
 
     @Override
     public synchronized LotteryTicket submitLotteryTicketSync(Long lotteryId, String username) throws ResourceNotFoundException,
-            UnableToSubmitLotteryTicket
-    {
+            UnableToSubmitLotteryTicket {
         return submitLotteryTicketByLotteryId(lotteryId, username);
     }
 
-    public LotteryTicket submitLotteryTicketByLotteryId(Long lotteryId, String username) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
-    {
+    public LotteryTicket submitLotteryTicketByLotteryId(Long lotteryId, String username) throws ResourceNotFoundException, UnableToSubmitLotteryTicket {
         Lottery lottery = lotteryService.findById(lotteryId);
 
         lotteryStatusCheck(lottery);
@@ -65,60 +59,49 @@ public class LotteryTicketServiceImpl implements LotteryTicketService
         return ticket;
     }
 
-    private void lotteryStatusCheck(Lottery lottery) throws UnableToSubmitLotteryTicket
-    {
-        if (LotteryStatus.PASSIVE.equals(lottery.getStatus()))
-        {
+    private void lotteryStatusCheck(Lottery lottery) throws UnableToSubmitLotteryTicket {
+        if (LotteryStatus.PASSIVE.equals(lottery.getStatus())) {
             throw new UnableToSubmitLotteryTicket("Lottery is passive for this id :: " + lottery.getId());
         }
     }
 
-    private void validateUsername(String username)
-    {
-        if (username == null || username.equals("") || userService.findByUsername(username) == null)
-        {
+    private void validateUsername(String username) {
+        if (username == null || username.equals("") || userService.findByUsername(username) == null) {
             throw new UsernameNotFoundException("username couldn't find :: " + username);
         }
     }
 
-    private Long generateLotteryNumber(Long lotteryId)
-    {
+    private Long generateLotteryNumber(Long lotteryId) {
         LotteryTicket ticket = lotteryTicketRepository.findFirstByLotteryIdOrderByLotteryNumberDesc(lotteryId);
         return ticket == null ? 1L : ticket.getLotteryNumber() + 1;
     }
 
     @Override
-    public void selectRandomLotteryWinnerAndSaveResult(Long lotteryId) throws ResourceNotFoundException
-    {
+    public void selectRandomLotteryWinnerAndSaveResult(Long lotteryId) throws ResourceNotFoundException {
         Long winnerLotteryNum = selectRandomLotteryWinner(lotteryId);
         saveLotteryResultByLotteryId(lotteryId, winnerLotteryNum);
     }
 
-    private Long selectRandomLotteryWinner(Long lotteryId) throws ResourceNotFoundException
-    {
+    private Long selectRandomLotteryWinner(Long lotteryId) throws ResourceNotFoundException {
         Long count = lotteryTicketRepository.countLotteryTicketByLotteryId(lotteryId);
 
-        if (count == 0)
-        {
+        if (count == 0) {
             logger.info("Couldn't find any participate related to lottery id :: " + lotteryId);
             return -1L;
         }
         long random = getRandom(count);
         LotteryTicket ticket = lotteryTicketRepository.findByLotteryNumberAndLotteryId(random, lotteryId);
-        if (ticket == null)
-        {
+        if (ticket == null) {
             throw new ResourceNotFoundException("Lottery ticket couldn't find for this lottery number :: " + random);
         }
         return ticket.getLotteryNumber();
     }
 
-    private void saveLotteryResultByLotteryId(Long lotteryId, Long winnerLotteryNum)
-    {
+    private void saveLotteryResultByLotteryId(Long lotteryId, Long winnerLotteryNum) {
         lotteryResultService.saveLotteryResult(lotteryId, winnerLotteryNum);
     }
 
-    private long getRandom(Long count)
-    {
+    private long getRandom(Long count) {
         Random rand = new Random();
         return rand.nextInt(count.intValue()) + 1L;
     }

@@ -18,7 +18,7 @@ import com.spring.model.User;
 import com.spring.repository.UserRepository;
 
 @Service("userDetailsServiceImpl")
-public class UserDetailsServiceImpl implements UserDetailsService{
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         if (user == null) throw new UsernameNotFoundException(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRole()){
+        for (Role role : user.getRole()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 

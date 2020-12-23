@@ -17,9 +17,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "lottery_ticket")
-public class LotteryTicket implements Serializable
-{
+public class LotteryTicket implements Serializable {
+
     private static final long serialVersionUID = -1505299657602326790L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -7,8 +7,8 @@ import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
 
-public interface LotteryService
-{
+public interface LotteryService {
+
     Lottery startLotteryByName(String lotteryName) throws UnableToSaveException;
 
     Lottery findById(Long lotteryId) throws ResourceNotFoundException;

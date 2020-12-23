@@ -20,8 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "lottery_result")
-public class LotteryResult implements Serializable
-{
+public class LotteryResult implements Serializable {
+
     private static final long serialVersionUID = 3963803585404654754L;
 
     @Id
@@ -31,14 +31,13 @@ public class LotteryResult implements Serializable
     @Column(nullable = false)
     private Date date;
 
-    @Column(unique=true, nullable = false)
+    @Column(unique = true, nullable = false)
     private Long lotteryId;
 
     @NotEmpty
     private Long winnerLotteryNumber;
 
-    public LotteryResult(Date date, Long lotteryId, Long winnerLotteryNumber)
-    {
+    public LotteryResult(Date date, Long lotteryId, Long winnerLotteryNumber) {
         this.date = date;
         this.lotteryId = lotteryId;
         this.winnerLotteryNumber = winnerLotteryNumber;

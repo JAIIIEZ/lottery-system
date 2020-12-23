@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.model.LotteryResult;
 
 @Repository
-public interface LotteryResultRepository extends JpaRepository<LotteryResult, Long>
-{
+public interface LotteryResultRepository extends JpaRepository<LotteryResult, Long> {
+
     LotteryResult findByLotteryId(Long lotteryId);
 }

@@ -17,46 +17,43 @@ import com.spring.exception.LotteryAlreadyPassiveException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
+import com.spring.model.ResponseTransfer;
 import com.spring.service.LotteryService;
 
 @RestController
 @RequestMapping("/lottery")
-public class LotteryController
-{
+public class LotteryController {
+
     @Autowired
     private LotteryService lotteryService;
 
     // at 12:00 AM every day
     @Scheduled(cron = "0 0 0 * * ?")
     @PostMapping("/endActiveLotteriesAndSelectWinnersMidnight")
-    public void endLotteryAndSelectRandomLotteryWinner() throws ResourceNotFoundException
-    {
+    public void endLotteryAndSelectRandomLotteryWinner() throws ResourceNotFoundException {
         lotteryService.endActiveLotteriesAndSelectLotteryWinners();
     }
 
     @PostMapping("/endLotteryAndSelectRandomLotteryWinner/{lotteryId}")
-    public void endLotteryAndSelectRandomLotteryWinner(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException
-    {
+    public ResponseTransfer endLotteryAndSelectRandomLotteryWinner(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException {
         if (!isEligibleLotteryId(lotteryId)) {
             throw new ResourceNotFoundException("Lottery id not found :: " + lotteryId);
         }
         lotteryService.endLotteryAndSelectLotteryWinner(lotteryId);
+        return new ResponseTransfer("Lottery ended successfully!");
     }
 
-    private boolean isEligibleLotteryId(Long lotteryId)
-    {
+    private boolean isEligibleLotteryId(Long lotteryId) {
         return !(lotteryId == null || lotteryId < 0);
     }
 
     @GetMapping(value = "/activeLotteries", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Lottery> getActiveLotteries()
-    {
+    public List<Lottery> getActiveLotteries() {
         return lotteryService.getActiveLotteries();
     }
 
     @PostMapping(value = "/startLottery")
-    public Lottery startLottery(@RequestParam("lotteryName") String lotteryName) throws UnableToSaveException
-    {
+    public Lottery startLottery(@RequestParam("lotteryName") String lotteryName) throws UnableToSaveException {
         return lotteryService.startLotteryByName(lotteryName);
     }
 }

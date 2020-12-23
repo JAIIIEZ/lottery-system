@@ -19,8 +19,8 @@ import com.spring.service.LotteryService;
 import com.spring.service.LotteryTicketService;
 
 @Service
-public class LotteryServiceImpl implements LotteryService
-{
+public class LotteryServiceImpl implements LotteryService {
+
     @Autowired
     private LotteryRepository lotteryRepository;
 
@@ -31,8 +31,7 @@ public class LotteryServiceImpl implements LotteryService
 
     @Transactional
     @Override
-    public Lottery startLotteryByName(String lotteryName) throws UnableToSaveException
-    {
+    public Lottery startLotteryByName(String lotteryName) throws UnableToSaveException {
         checkActiveLotteryWithSameName(lotteryName);
 
         Lottery lottery = new Lottery();
@@ -42,23 +41,19 @@ public class LotteryServiceImpl implements LotteryService
         return lotteryRepository.save(lottery);
     }
 
-    public void checkActiveLotteryWithSameName(String lotteryName) throws UnableToSaveException
-    {
+    public void checkActiveLotteryWithSameName(String lotteryName) throws UnableToSaveException {
         Long count = lotteryRepository.countByNameAndStatus(lotteryName, LotteryStatus.ACTIVE);
 
-        if (count > 0)
-        {
+        if (count > 0) {
             throw new UnableToSaveException("There is already active lottery by this name :: " + lotteryName);
         }
     }
 
 
     @Override
-    public Lottery findById(Long lotteryId)
-    {
+    public Lottery findById(Long lotteryId) {
         Lottery lottery = lotteryRepository.findById(lotteryId);
-        if (lottery == null)
-        {
+        if (lottery == null) {
             throw new IllegalArgumentException("Lottery not found for this id :: " + lotteryId);
         }
         return lottery;
@@ -66,16 +61,12 @@ public class LotteryServiceImpl implements LotteryService
 
     @Transactional
     @Override
-    public void endActiveLotteriesAndSelectLotteryWinners()
-    {
+    public void endActiveLotteriesAndSelectLotteryWinners() {
         List<Lottery> lotteries = getActiveLotteries();
         lotteries.stream().forEach(lottery -> {
-            try
-            {
+            try {
                 endLotteryAndSelectLotteryWinner(lottery.getId());
-            }
-            catch (ResourceNotFoundException | LotteryAlreadyPassiveException e)
-            {
+            } catch (ResourceNotFoundException | LotteryAlreadyPassiveException e) {
                 logger.error("Lottery couldn't end for that id {} , error: {} ", lottery.getId(), e.getMessage());
             }
         });
@@ -83,29 +74,23 @@ public class LotteryServiceImpl implements LotteryService
 
     @Transactional
     @Override
-    public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException
-    {
+    public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException {
         endLotteryById(lotteryId);
         lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lotteryId);
     }
 
-    private void endLotteryById(Long lotteryId) throws LotteryAlreadyPassiveException
-    {
+    private void endLotteryById(Long lotteryId) throws LotteryAlreadyPassiveException {
         Lottery lottery = findById(lotteryId);
-        if (LotteryStatus.PASSIVE.equals(lottery.getStatus()))
-        {
+        if (LotteryStatus.PASSIVE.equals(lottery.getStatus())) {
             throw new LotteryAlreadyPassiveException("Lottery id is already passive! :: " + lotteryId);
-        }
-        else
-        {
+        } else {
             lottery.setStatus(LotteryStatus.PASSIVE);
             lotteryRepository.save(lottery);
         }
     }
 
     @Override
-    public List<Lottery> getActiveLotteries()
-    {
+    public List<Lottery> getActiveLotteries() {
         return lotteryRepository.findLotteriesByStatus(LotteryStatus.ACTIVE);
     }
 

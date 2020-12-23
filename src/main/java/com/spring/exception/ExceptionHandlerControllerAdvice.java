@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
-public class ExceptionHandlerControllerAdvice
-{
+public class ExceptionHandlerControllerAdvice {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
@@ -34,7 +33,7 @@ public class ExceptionHandlerControllerAdvice
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
-       ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
@@ -50,12 +49,6 @@ public class ExceptionHandlerControllerAdvice
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handleValidationExceptions(RuntimeException ex, WebRequest request) {
-        ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.ALREADY_REPORTED);
-    }
-
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<?> handleValidationExceptions(UserAlreadyExistException ex, WebRequest request) {
         ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
@@ -67,4 +60,11 @@ public class ExceptionHandlerControllerAdvice
         ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(LotteryIsNotFinishException.class)
+    public ResponseEntity<?> handleValidationExceptions(LotteryIsNotFinishException ex, WebRequest request) {
+        ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.TOO_EARLY);
+    }
+
 }

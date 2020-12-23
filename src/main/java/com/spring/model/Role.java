@@ -20,8 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "role")
-public class Role implements Serializable
-{
+public class Role implements Serializable {
+
     private static final long serialVersionUID = -4663741168194414419L;
 
     @Id
@@ -33,8 +33,7 @@ public class Role implements Serializable
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "role")
     private List<User> user;
 
-    public Role(String name)
-    {
+    public Role(String name) {
         this.name = name;
     }
 

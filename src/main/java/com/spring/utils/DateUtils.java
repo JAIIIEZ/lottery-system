@@ -3,8 +3,8 @@ package com.spring.utils;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class DateUtils
-{
+public final class DateUtils {
+
     private DateUtils() {
         throw new IllegalStateException("Utility class");
     }

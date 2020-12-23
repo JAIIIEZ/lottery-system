@@ -13,8 +13,8 @@ import com.spring.repository.UserRepository;
 import com.spring.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService
-{
+public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -22,14 +22,12 @@ public class UserServiceImpl implements UserService
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public User findByUsername(String username)
-    {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public User createUser(UserDto userDto)
-    {
+    public User createUser(UserDto userDto) {
         User user = new User();
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());

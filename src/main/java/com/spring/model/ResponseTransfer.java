@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ResponseTransfer
-{
+public class ResponseTransfer {
     private String text;
 }

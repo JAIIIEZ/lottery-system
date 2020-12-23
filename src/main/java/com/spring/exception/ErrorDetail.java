@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ErrorDetail
-{
+public class ErrorDetail {
+
     private Date timestamp;
     private String message;
     private String details;

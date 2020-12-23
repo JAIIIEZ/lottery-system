@@ -8,8 +8,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDto
-{
+public class UserDto {
+
     @NotNull
     @NotEmpty
     private String firstName;

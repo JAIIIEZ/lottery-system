@@ -1,5 +1,7 @@
 package com.spring.controller;
 
+import com.spring.exception.UserAlreadyExistException;
+import com.spring.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +22,8 @@ import com.spring.repository.UserRepository;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class UserControllerTest
-{
+public class UserControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -40,10 +42,10 @@ public class UserControllerTest
                 .accept(MediaType.APPLICATION_JSON)
                 .content(
                         "{\"firstName\":\"Merve\"," +
-                        "\"lastName\":\"Kaygısız\"," +
-                        "\"username\":\"merve832\"," +
-                        "\"password\":\"password\"," +
-                        "\"passwordConfirm\":\"password\"}")
+                                "\"lastName\":\"Kaygısız\"," +
+                                "\"username\":\"merve832\"," +
+                                "\"password\":\"password\"," +
+                                "\"passwordConfirm\":\"password\"}")
                 .contentType(MediaType.APPLICATION_JSON);
 
         String expectedData = "Thanks For Registration!!!";
@@ -53,9 +55,8 @@ public class UserControllerTest
 
     }
 
-    @Test
-    public void givenUserRegistered_whenDuplicatedRegister_thenCorrect() throws Exception
-    {
+    @Test(expected = UserAlreadyExistException.class)
+    public void givenUserRegistered_whenDuplicatedRegister_thenCorrect() throws Exception, UserAlreadyExistException {
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/register")
                 .accept(MediaType.APPLICATION_JSON)
@@ -69,8 +70,7 @@ public class UserControllerTest
 
         mockMvc.perform(request);
         mockMvc.perform(request)
-                .andExpect(status().isAlreadyReported());
-
+                .andExpect(status().isMethodNotAllowed());
     }
 
 }

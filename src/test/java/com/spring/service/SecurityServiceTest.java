@@ -15,8 +15,8 @@ import com.spring.repository.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SecurityServiceTest
-{
+public class SecurityServiceTest {
+
     @Autowired
     private SecurityService securityService;
 
@@ -27,7 +27,7 @@ public class SecurityServiceTest
     private UserRepository userRepository;
 
     @Before
-    public void initEach(){
+    public void initEach() {
         userRepository.deleteAll();
     }
 

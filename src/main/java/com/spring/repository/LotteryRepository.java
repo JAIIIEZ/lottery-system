@@ -9,8 +9,8 @@ import com.spring.model.Lottery;
 import com.spring.model.LotteryStatus;
 
 @Repository
-public interface LotteryRepository extends JpaRepository<Lottery, String>
-{
+public interface LotteryRepository extends JpaRepository<Lottery, String> {
+
     List<Lottery> findLotteriesByStatus(LotteryStatus status);
 
     Lottery findById(Long id);

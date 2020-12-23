@@ -30,6 +30,16 @@ public class UserController {
     @Autowired
     private UserValidator userValidator;
 
+
+    @PostMapping("/register")
+    @ResponseBody
+    public ResponseTransfer register(@RequestBody UserDto dto, BindingResult bindingResult) {
+        userValidator.validate(dto, bindingResult);
+        userService.createUser(dto);
+        return new ResponseTransfer("Thanks For Registration!!!");
+    }
+
+
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("userForm", new UserDto());
@@ -38,8 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registration(@ModelAttribute("userForm") @Valid UserDto userForm, BindingResult bindingResult)
-    {
+    public String registration(@ModelAttribute("userForm") @Valid UserDto userForm, BindingResult bindingResult) {
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
@@ -69,11 +78,4 @@ public class UserController {
         return "welcome";
     }
 
-    @PostMapping("/register")
-    @ResponseBody
-    public ResponseTransfer register(@RequestBody UserDto dto, BindingResult bindingResult) {
-        userValidator.validate(dto, bindingResult);
-        userService.createUser(dto);
-        return new ResponseTransfer("Thanks For Registration!!!");
-    }
 }

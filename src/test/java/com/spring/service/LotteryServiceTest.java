@@ -22,8 +22,8 @@ import com.spring.repository.LotteryResultRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class LotteryServiceTest
-{
+public class LotteryServiceTest {
+
     @Autowired
     private LotteryService lotteryService;
 
@@ -37,14 +37,13 @@ public class LotteryServiceTest
     final static String LOTTERY_B = "Lottery B";
 
     @Before
-    public void initEach(){
+    public void initEach() {
         lotteryRepository.deleteAll();
         lotteryResultRepository.deleteAll();
     }
 
     @Test
-    public void shouldStartLottery() throws UnableToSaveException
-    {
+    public void shouldStartLottery() throws UnableToSaveException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
 
         Assert.assertNotNull(lottery);
@@ -54,8 +53,7 @@ public class LotteryServiceTest
     }
 
     @Test(expected = UnableToSaveException.class)
-    public void shouldThrowException_WhenActiveLotteryWithSameNameExist() throws UnableToSaveException
-    {
+    public void shouldThrowException_WhenActiveLotteryWithSameNameExist() throws UnableToSaveException {
         lotteryService.startLotteryByName(LOTTERY_A);
         lotteryService.startLotteryByName(LOTTERY_A);
     }
@@ -63,8 +61,7 @@ public class LotteryServiceTest
 
     @Transactional
     @Test
-    public void shouldFindLotteryById() throws ResourceNotFoundException, UnableToSaveException
-    {
+    public void shouldFindLotteryById() throws ResourceNotFoundException, UnableToSaveException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
 
         Lottery lottery2 = lotteryService.findById(lottery.getId());
@@ -73,8 +70,7 @@ public class LotteryServiceTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowException_WhenLotteryCouldntFind() throws ResourceNotFoundException
-    {
+    public void shouldThrowException_WhenLotteryCouldntFind() throws ResourceNotFoundException {
         lotteryService.findById(null);
     }
 
@@ -98,8 +94,7 @@ public class LotteryServiceTest
 
     @Transactional
     @Test
-    public void shouldGetActiveLotteries_AfterEndLottery() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException
-    {
+    public void shouldGetActiveLotteries_AfterEndLottery() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
         Lottery lottery2 = lotteryService.startLotteryByName(LOTTERY_B);
 
@@ -110,8 +105,7 @@ public class LotteryServiceTest
 
     @Transactional
     @Test
-    public void shouldEndLotteryById() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException
-    {
+    public void shouldEndLotteryById() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
 
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
@@ -120,8 +114,7 @@ public class LotteryServiceTest
     }
 
     @Test(expected = LotteryAlreadyPassiveException.class)
-    public void shouldThrowException_WhenLotteryIsAlreadyPassive() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException
-    {
+    public void shouldThrowException_WhenLotteryIsAlreadyPassive() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
         lottery.setStatus(LotteryStatus.PASSIVE);
         lotteryRepository.save(lottery);
@@ -131,8 +124,7 @@ public class LotteryServiceTest
 
     @Transactional
     @Test
-    public void shouldEndActiveLotteries() throws ResourceNotFoundException, UnableToSaveException
-    {
+    public void shouldEndActiveLotteries() throws ResourceNotFoundException, UnableToSaveException {
         lotteryService.startLotteryByName(LOTTERY_A);
         lotteryService.startLotteryByName(LOTTERY_B);
 
@@ -143,8 +135,7 @@ public class LotteryServiceTest
 
     @Transactional
     @Test
-    public void shouldEndOtherActiveLotteries_WhenOneOfThemFails() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException
-    {
+    public void shouldEndOtherActiveLotteries_WhenOneOfThemFails() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
         lotteryService.startLotteryByName(LOTTERY_B);
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());

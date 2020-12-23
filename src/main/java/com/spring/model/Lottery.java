@@ -20,8 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "lottery")
-public class Lottery implements Serializable
-{
+public class Lottery implements Serializable {
+
     private static final long serialVersionUID = 4818407936362707499L;
 
     @Id

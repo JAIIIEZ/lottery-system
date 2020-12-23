@@ -17,13 +17,13 @@ import com.spring.model.User;
 @Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserRepositoryTest
-{
+public class UserRepositoryTest {
+
     @Autowired
     private UserRepository userRepository;
 
     @Before
-    public void initEach(){
+    public void initEach() {
         userRepository.deleteAll();
     }
 

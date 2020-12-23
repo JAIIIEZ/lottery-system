@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.dto.LotteryResultDto;
+import com.spring.exception.LotteryIsNotFinishException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.service.LotteryResultService;
 
 @RestController
 @RequestMapping("/lotteryResult")
-public class LotteryResultController
-{
+public class LotteryResultController {
+
     @Autowired
     private LotteryResultService lotteryResultService;
 
     @GetMapping(value = "/{lotteryId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LotteryResultDto getLotteryResultsByDateAndLotteryId(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException
-    {
+    public LotteryResultDto getLotteryResultsByDateAndLotteryId(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryIsNotFinishException {
         return lotteryResultService.getLotteryResultByLotteryId(lotteryId);
     }
 }
