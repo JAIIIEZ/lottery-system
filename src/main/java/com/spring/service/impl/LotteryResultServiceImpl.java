@@ -12,7 +12,6 @@ import com.spring.exception.ResourceNotFoundException;
 import com.spring.model.LotteryResult;
 import com.spring.repository.LotteryResultRepository;
 import com.spring.service.LotteryResultService;
-import com.spring.utils.DateUtils;
 
 @Service
 public class LotteryResultServiceImpl implements LotteryResultService
@@ -41,8 +40,7 @@ public class LotteryResultServiceImpl implements LotteryResultService
 
     @Override
     public LotteryResult saveLotteryResult(Long lotteryId, Long winnerNum) {
-        Date yesterday = DateUtils.yesterday();
-        LotteryResult result = new LotteryResult(yesterday, lotteryId, winnerNum);
+        LotteryResult result = new LotteryResult(new Date(), lotteryId, winnerNum);
         return lotteryResultRepository.save(result);
     }
 }

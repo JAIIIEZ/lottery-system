@@ -17,7 +17,7 @@ import com.spring.model.Role;
 import com.spring.model.User;
 import com.spring.repository.UserRepository;
 
-@Service
+@Service("userDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Autowired

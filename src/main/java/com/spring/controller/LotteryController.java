@@ -3,11 +3,14 @@ package com.spring.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.exception.LotteryAlreadyPassiveException;
@@ -45,14 +48,14 @@ public class LotteryController
         return !(lotteryId == null || lotteryId < 0);
     }
 
-    @GetMapping("/activeLotteries")
+    @GetMapping(value = "/activeLotteries", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Lottery> getActiveLotteries()
     {
         return lotteryService.getActiveLotteries();
     }
 
-    @PostMapping("/startLottery/{lotteryName}")
-    public Lottery startLottery(@PathVariable String lotteryName) throws UnableToSaveException
+    @PostMapping(value = "/startLottery")
+    public Lottery startLottery(@RequestParam("lotteryName") String lotteryName) throws UnableToSaveException
     {
         return lotteryService.startLotteryByName(lotteryName);
     }

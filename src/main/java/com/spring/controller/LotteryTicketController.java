@@ -1,6 +1,7 @@
 package com.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class LotteryTicketController
     @Autowired
     private LotteryTicketService lotteryTicketService;
 
-    @PostMapping("submitLottery/{lotteryId}/{username}")
+    @PostMapping(value = "submitLottery/{lotteryId}/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public LotteryTicket submitLottery(@PathVariable("lotteryId") Long lotteryId, @PathVariable("username") String username) throws ResourceNotFoundException, UnableToSubmitLotteryTicket
     {
         return lotteryTicketService.submitLotteryTicketSync(lotteryId, username);

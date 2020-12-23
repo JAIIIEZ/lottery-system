@@ -3,6 +3,7 @@ package com.spring;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import com.spring.controller.UserControllerTest;
 import com.spring.repository.LotteryRepositoryTest;
 import com.spring.repository.LotteryResultRepositoryTest;
 import com.spring.repository.LotteryTicketRepositoryTest;
@@ -15,15 +16,16 @@ import com.spring.service.UserServiceTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        LotteryRepositoryTest.class,
+        LotteryTicketRepositoryTest.class,
+        LotteryResultRepositoryTest.class,
+        UserRepositoryTest.class,
         LotteryResultServiceTest.class,
         LotteryServiceTest.class,
         LotteryTicketServiceTest.class,
         SecurityServiceTest.class,
         UserServiceTest.class,
-        LotteryRepositoryTest.class,
-        LotteryTicketRepositoryTest.class,
-        LotteryResultRepositoryTest.class,
-        UserRepositoryTest.class
+        UserControllerTest.class
 })
 public class JunitTestSuite
 {

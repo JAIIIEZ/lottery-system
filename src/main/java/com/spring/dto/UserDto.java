@@ -20,10 +20,11 @@ public class UserDto
 
     @NotNull
     @NotEmpty
-    private String password;
-    private String passwordConfirm;
+    private String username;
 
     @NotNull
     @NotEmpty
-    private String username;
+    private String password;
+    private String passwordConfirm;
+
 }

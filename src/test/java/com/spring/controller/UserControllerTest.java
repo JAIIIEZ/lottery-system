@@ -1,36 +1,76 @@
 package com.spring.controller;
 
-import java.util.UUID;
-
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.spring.dto.UserDto;
-import com.spring.exception.UserAlreadyExistException;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.spring.repository.UserRepository;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 public class UserControllerTest
 {
     @Autowired
-    private UserController userController;
+    private MockMvc mockMvc;
 
+    @Autowired
+    private UserRepository userRepository;
 
-    @Test(expected = UserAlreadyExistException.class)
-    public void givenUserRegistered_whenDuplicatedRegister_thenCorrect()
+    @Before
+    public void init() {
+        userRepository.deleteAll();
+    }
+
+    @Test
+    public void shouldUserRegister() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/register")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(
+                        "{\"firstName\":\"Merve\"," +
+                        "\"lastName\":\"Kaygısız\"," +
+                        "\"username\":\"merve832\"," +
+                        "\"password\":\"password\"," +
+                        "\"passwordConfirm\":\"password\"}")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        String expectedData = "Thanks For Registration!!!";
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(expectedData));
+
+    }
+
+    @Test
+    public void givenUserRegistered_whenDuplicatedRegister_thenCorrect() throws Exception
     {
-        final String email = UUID.randomUUID().toString();
-        final UserDto userDto = createUserDto(email);
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/register")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(
+                        "{\"firstName\":\"Merve\"," +
+                                "\"lastName\":\"Kaygısız\"," +
+                                "\"username\":\"merve87442\"," +
+                                "\"password\":\"password\"," +
+                                "\"passwordConfirm\":\"password\"}")
+                .contentType(MediaType.APPLICATION_JSON);
 
+        mockMvc.perform(request);
+        mockMvc.perform(request)
+                .andExpect(status().isAlreadyReported());
 
     }
 
-    private UserDto createUserDto(final String username) {
-        final UserDto userDto = new UserDto();
-        userDto.setUsername(username);
-        userDto.setPassword("SecretPassword");
-        userDto.setPasswordConfirm("SecretPassword");
-        userDto.setFirstName("Merve");
-        userDto.setLastName("Kaygisiz");
-        return userDto;
-    }
 }

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "user", schema = "public")
+@Table(name = "users")
 public class User implements Serializable
 {
     private static final long serialVersionUID = 1983877116107993546L;
@@ -35,8 +35,8 @@ public class User implements Serializable
     private String password;
 
     @ManyToMany
-    @JoinTable(name = "USER_ROLES", joinColumns = {
-            @JoinColumn(name = "USER_USERNAME", referencedColumnName = "username")}, inverseJoinColumns = {
+    @JoinTable(name = "USERS_ROLES", joinColumns = {
+            @JoinColumn(name = "USERS_USERNAME", referencedColumnName = "username")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_NAME", referencedColumnName = "name") })
     private List<Role> role;
 

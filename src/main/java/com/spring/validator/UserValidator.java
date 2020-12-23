@@ -33,7 +33,7 @@ public class UserValidator implements Validator
 
         if (userService.findByUsername(userDto.getUsername()) != null) {
             errors.rejectValue("username", "Duplicate.userForm.username");
-            throw new UserAlreadyExistException(userDto.getUsername());
+            throw new UserAlreadyExistException("user already exist :: " + userDto.getUsername());
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");

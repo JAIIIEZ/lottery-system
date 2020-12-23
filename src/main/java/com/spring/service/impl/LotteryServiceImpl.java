@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.exception.LotteryAlreadyPassiveException;
 import com.spring.exception.ResourceNotFoundException;
@@ -28,6 +29,7 @@ public class LotteryServiceImpl implements LotteryService
 
     private static final Logger logger = LoggerFactory.getLogger(LotteryServiceImpl.class);
 
+    @Transactional
     @Override
     public Lottery startLotteryByName(String lotteryName) throws UnableToSaveException
     {
@@ -62,6 +64,7 @@ public class LotteryServiceImpl implements LotteryService
         return lottery;
     }
 
+    @Transactional
     @Override
     public void endActiveLotteriesAndSelectLotteryWinners()
     {
@@ -78,6 +81,7 @@ public class LotteryServiceImpl implements LotteryService
         });
     }
 
+    @Transactional
     @Override
     public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException
     {
