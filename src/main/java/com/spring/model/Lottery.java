@@ -30,7 +30,9 @@ public class Lottery implements Serializable {
 
     private String name;
 
-    private Date date;
+    private Date startDate;
 
-    private LotteryStatus status;
+    private Date endDate;
+
+    private Long winnerLotteryNumber;
 }

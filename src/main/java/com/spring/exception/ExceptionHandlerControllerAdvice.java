@@ -55,16 +55,12 @@ public class ExceptionHandlerControllerAdvice {
         return new ResponseEntity<>(errorDetails, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler(LotteryAlreadyPassiveException.class)
-    public ResponseEntity<?> handleValidationExceptions(LotteryAlreadyPassiveException ex, WebRequest request) {
+    @ExceptionHandler(LotteryStatusException.class)
+    public ResponseEntity<?> handleValidationExceptions(LotteryStatusException ex, WebRequest request) {
         ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorDetails, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler(LotteryIsNotFinishException.class)
-    public ResponseEntity<?> handleValidationExceptions(LotteryIsNotFinishException ex, WebRequest request) {
-        ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.TOO_EARLY);
-    }
+
 
 }

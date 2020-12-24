@@ -2,10 +2,12 @@ package com.spring.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com.spring.exception.LotteryStatusException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.spring.dto.LotteryResultDto;
 import com.spring.dto.UserDto;
-import com.spring.exception.LotteryAlreadyPassiveException;
-import com.spring.exception.LotteryIsNotFinishException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.exception.UnableToSubmitLotteryTicket;
@@ -27,6 +27,7 @@ import com.spring.model.LotteryTicket;
 import com.spring.repository.LotteryRepository;
 import com.spring.repository.LotteryTicketRepository;
 import com.spring.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @RunWith(SpringRunner.class)
@@ -50,9 +51,6 @@ public class LotteryTicketServiceTest {
 
     @Autowired
     private LotteryTicketRepository lotteryTicketRepository;
-
-    @Autowired
-    private LotteryResultService lotteryResultService;
 
     private final static int NUM_THREADS = 1000;
 
@@ -100,7 +98,7 @@ public class LotteryTicketServiceTest {
     }
 
     @Test(expected = UnableToSubmitLotteryTicket.class)
-    public void shouldThrowException_WhenLotteryIsFinish() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket, LotteryAlreadyPassiveException {
+    public void shouldThrowException_WhenLotteryIsFinish() throws UnableToSaveException, ResourceNotFoundException, UnableToSubmitLotteryTicket, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
 
@@ -117,7 +115,7 @@ public class LotteryTicketServiceTest {
         Assert.assertEquals(lotteryTicketRepository.count(), NUM_THREADS);
     }
 
-    private void generateMultiThreadSubmitLottery(Long lotteryId) throws UnableToSaveException, InterruptedException {
+    private void generateMultiThreadSubmitLottery(Long lotteryId) throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
 
         for (int i = 0; i < NUM_THREADS; i++) {
@@ -137,27 +135,24 @@ public class LotteryTicketServiceTest {
     }
 
     @Test
-    public void shouldSaveLotteryResult_WhenSelectLotteryWinner() throws UnableToSaveException, ResourceNotFoundException, InterruptedException, LotteryIsNotFinishException {
+    public void shouldSaveLotteryResult_WhenLotteryWinnerSelected() throws UnableToSaveException, ResourceNotFoundException, InterruptedException, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("mervekaygisiz");
 
         generateMultiThreadSubmitLottery(lottery.getId());
-        lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lottery.getId());
+        Long winnerNum = lotteryTicketService.selectRandomLotteryWinner(lottery.getId());
 
-        LotteryResultDto result = lotteryResultService.getLotteryResultByLotteryId(lottery.getId());
-        assertNotNull(result);
-        Assert.assertTrue(isNumeric(result.getWinnerLotteryNumber()));
+        assertNotNull(winnerNum);
     }
 
     @Test
-    public void shouldSaveLotteryResult_WhenLotteryWinnerNotExist() throws UnableToSaveException, ResourceNotFoundException, LotteryIsNotFinishException {
+    public void shouldSaveLotteryResult_WhenLotteryWinnerNotExist() throws UnableToSaveException, ResourceNotFoundException, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("mervekaygisiz");
 
-        lotteryTicketService.selectRandomLotteryWinnerAndSaveResult(lottery.getId());
-
-        LotteryResultDto result = lotteryResultService.getLotteryResultByLotteryId(lottery.getId());
-        Assert.assertFalse(isNumeric(result.getWinnerLotteryNumber()));
+        Long winnerNum = lotteryTicketService.selectRandomLotteryWinner(lottery.getId());
+        Long expected = -1L;
+        Assert.assertEquals(expected, winnerNum);
     }
 
     private void createUser(final String username) {
@@ -173,4 +168,6 @@ public class LotteryTicketServiceTest {
     public static boolean isNumeric(String str) {
         return str.matches("-?\\d+(\\.\\d+)?");
     }
+
+
 }

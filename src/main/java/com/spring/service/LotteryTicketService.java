@@ -8,5 +8,5 @@ public interface LotteryTicketService {
 
     LotteryTicket submitLotteryTicketSync(Long lotteryId, String username) throws ResourceNotFoundException, UnableToSubmitLotteryTicket;
 
-    void selectRandomLotteryWinnerAndSaveResult(Long lotteryId) throws ResourceNotFoundException;
+    Long selectRandomLotteryWinner(Long lotteryId) throws ResourceNotFoundException;
 }

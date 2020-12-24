@@ -2,18 +2,13 @@ package com.spring.controller;
 
 import java.util.List;
 
+import com.spring.dto.LotteryResultDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.spring.exception.LotteryAlreadyPassiveException;
+import com.spring.exception.LotteryStatusException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
@@ -35,7 +30,7 @@ public class LotteryController {
     }
 
     @PostMapping("/endLotteryAndSelectRandomLotteryWinner/{lotteryId}")
-    public ResponseTransfer endLotteryAndSelectRandomLotteryWinner(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryAlreadyPassiveException {
+    public ResponseTransfer endLotteryAndSelectRandomLotteryWinner(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryStatusException {
         if (!isEligibleLotteryId(lotteryId)) {
             throw new ResourceNotFoundException("Lottery id not found :: " + lotteryId);
         }
@@ -55,5 +50,11 @@ public class LotteryController {
     @PostMapping(value = "/startLottery")
     public Lottery startLottery(@RequestParam("lotteryName") String lotteryName) throws UnableToSaveException {
         return lotteryService.startLotteryByName(lotteryName);
+    }
+
+    @GetMapping(value = "/lotteryResult/{lotteryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LotteryResultDto getLotteryResultByLotteryId(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryStatusException {
+        return lotteryService.getLotteryResultByLotteryId(lotteryId);
     }
 }

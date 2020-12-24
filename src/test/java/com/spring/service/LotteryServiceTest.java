@@ -2,7 +2,9 @@ package com.spring.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import com.spring.dto.LotteryResultDto;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,13 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.spring.exception.LotteryAlreadyPassiveException;
+import com.spring.exception.LotteryStatusException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
-import com.spring.model.LotteryStatus;
 import com.spring.repository.LotteryRepository;
-import com.spring.repository.LotteryResultRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,16 +30,12 @@ public class LotteryServiceTest {
     @Autowired
     private LotteryRepository lotteryRepository;
 
-    @Autowired
-    private LotteryResultRepository lotteryResultRepository;
-
     final static String LOTTERY_A = "Lottery A";
     final static String LOTTERY_B = "Lottery B";
 
     @Before
     public void initEach() {
         lotteryRepository.deleteAll();
-        lotteryResultRepository.deleteAll();
     }
 
     @Test
@@ -48,7 +44,8 @@ public class LotteryServiceTest {
 
         Assert.assertNotNull(lottery);
         Assert.assertNotNull(lottery.getId());
-        Assert.assertEquals(LotteryStatus.ACTIVE, lottery.getStatus());
+        Assert.assertNotNull(lottery.getStartDate());
+        Assert.assertNull(lottery.getEndDate());
         Assert.assertEquals(LOTTERY_A, lottery.getName());
     }
 
@@ -64,14 +61,14 @@ public class LotteryServiceTest {
     public void shouldFindLotteryById() throws ResourceNotFoundException, UnableToSaveException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
 
-        Lottery lottery2 = lotteryService.findById(lottery.getId());
+        Lottery lottery2 = lotteryService.findByLotteryId(lottery.getId());
 
         Assert.assertEquals(lottery, lottery2);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowException_WhenLotteryCouldntFind() throws ResourceNotFoundException {
-        lotteryService.findById(null);
+        lotteryService.findByLotteryId(null);
     }
 
     @Test
@@ -94,7 +91,7 @@ public class LotteryServiceTest {
 
     @Transactional
     @Test
-    public void shouldGetActiveLotteries_AfterEndLottery() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
+    public void shouldGetActiveLotteries_AfterEndLottery() throws ResourceNotFoundException, UnableToSaveException, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
         Lottery lottery2 = lotteryService.startLotteryByName(LOTTERY_B);
 
@@ -105,19 +102,19 @@ public class LotteryServiceTest {
 
     @Transactional
     @Test
-    public void shouldEndLotteryById() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
-        Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
+    public void shouldEndLotteryById() throws ResourceNotFoundException, UnableToSaveException, LotteryStatusException {
+        final String lotteryName = UUID.randomUUID().toString();
+        Lottery lottery = lotteryService.startLotteryByName(lotteryName);
 
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
 
-        Assert.assertEquals(LotteryStatus.PASSIVE, lottery.getStatus());
+        Assert.assertNotNull(lottery.getEndDate());
     }
 
-    @Test(expected = LotteryAlreadyPassiveException.class)
-    public void shouldThrowException_WhenLotteryIsAlreadyPassive() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
+    @Test(expected = LotteryStatusException.class)
+    public void shouldThrowException_WhenLotteryIsAlreadyPassive() throws ResourceNotFoundException, UnableToSaveException, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
-        lottery.setStatus(LotteryStatus.PASSIVE);
-        lotteryRepository.save(lottery);
+        lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
 
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
     }
@@ -135,7 +132,7 @@ public class LotteryServiceTest {
 
     @Transactional
     @Test
-    public void shouldEndOtherActiveLotteries_WhenOneOfThemFails() throws ResourceNotFoundException, UnableToSaveException, LotteryAlreadyPassiveException {
+    public void shouldEndOtherActiveLotteries_WhenOneOfThemFails() throws ResourceNotFoundException, UnableToSaveException, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName(LOTTERY_A);
         lotteryService.startLotteryByName(LOTTERY_B);
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
@@ -144,5 +141,46 @@ public class LotteryServiceTest {
 
         Assert.assertEquals(0, lotteryService.getActiveLotteries().size());
     }
+
+    @Transactional
+    @Test
+    public void shouldSaveLotteryResult() throws UnableToSaveException, ResourceNotFoundException, LotteryStatusException {
+        Lottery lottery = createAndEndLottery();
+
+        Assert.assertNotNull(lottery.getEndDate());
+        Assert.assertNotNull(lottery.getWinnerLotteryNumber());
+    }
+
+
+    @Test
+    public void shouldGiveLotteryResult_WhenLotteryIdIsValid() throws ResourceNotFoundException, UnableToSaveException, LotteryStatusException {
+        Lottery lottery = createAndEndLottery();
+        LotteryResultDto result = lotteryService.getLotteryResultByLotteryId(lottery.getId());
+
+        Assert.assertNotNull(result);
+    }
+
+    @Transactional
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowException_WhenLotteryIdIsInvalid() throws ResourceNotFoundException, LotteryStatusException {
+        lotteryService.getLotteryResultByLotteryId(null);
+    }
+
+    @Transactional
+    @Test(expected = LotteryStatusException.class)
+    public void shouldThrowException_WhenLotteryIsStillActive() throws ResourceNotFoundException, UnableToSaveException, LotteryStatusException {
+        final String lotteryName = UUID.randomUUID().toString();
+        Lottery lottery = lotteryService.startLotteryByName(lotteryName);
+        lotteryService.getLotteryResultByLotteryId(lottery.getId());
+    }
+
+    private Lottery createAndEndLottery() throws UnableToSaveException, ResourceNotFoundException, LotteryStatusException {
+        final String lotteryName = UUID.randomUUID().toString();
+        Lottery lottery = lotteryService.startLotteryByName(lotteryName);
+        lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
+        return lottery;
+    }
+
+
 
 }
