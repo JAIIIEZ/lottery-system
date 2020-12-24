@@ -11,18 +11,52 @@ Requirements are:
 - All users will be able to check the winning ballot for any specific date.
 - The service will have to persist the data regarding the lottery.
 
-## 1 - What I have built
-I have built a CRUD RESTFul APIs for a Lottery System using Spring Boot 2 JPA and PostgreSQL database. Following are REST APIs (Controller handler methods) are created for lottery-system.
+## 1 - How to Run Project
 
-|   No     |   API Name    |   HTTP Method | Path |  Status Code | Description |
-|----------|---------------|---------------|------|--------------| ------------|
-|   (1)    |    POST       |   POST  |    |    |    |
-|   (2)    |    |    |    |    |    |
-|   (3)    |    |    |    |    |    |
-|   (4)    |    |    |    |    |    |
-|   (5)    |    |    |    |    |    |
-|   (6)    |    |    |    |    |    |
-|   (7)    |    |    |    |    |    |
+- Running with Docker Compose:
+
+Simply use: 
+
+ ```sh
+$ docker-compose up
+$ docker-compose down
+ ```
+ - Running on your local:
+ 
+ ### Prerequisites
+ 
+ - Java 11
+ - Postgresql
+ - Your preferred IDE
+      - Eclipse 
+      - IntelliJ IDEA
+      - VS Code
+ 
+ Create your database named "lottery" in postgresql and change application.properties as :
+
+```sh
+spring.datasource.url=jdbc:postgresql://localhost:5432/lottery
+spring.datasource.username=postgres
+spring.datasource.password=password
+
+## Hibernate Properties
+# The SQL dialect makes Hibernate generate better SQL for the chosen database
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+
+# Hibernate ddl auto (create, create-drop, validate, update)
+spring.jpa.hibernate.ddl-auto = create
+spring.jpa.generate-ddl=true
+spring.jpa.show-sql=true
+
+spring.mvc.view.prefix: /
+spring.mvc.view.suffix: .jsp
+spring.messages.basename=validation
+ ```
+ Then run that command in terminal:
+ 
+  ```sh
+ mvn clean spring-boot:run
+ ```
 
 ## 2 - Tools and Technologies Used
 
@@ -37,7 +71,8 @@ I have built a CRUD RESTFul APIs for a Lottery System using Spring Boot 2 JPA an
 * [JSP]
 * [Spring Security]
 * [Spring Web]
-* [Bootstrap]
+* [Postman]
+* [SonarLint]
 
 
 ## 3 - Packaging Structure
