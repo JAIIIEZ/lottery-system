@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.spring</groupId>
-	<artifactId>LotterySystem</artifactId>
+	<artifactId>lottery-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>LotterySystem</name>
+	<name>Lottery System</name>
 	<description>Lottery System Project</description>
 
 	<properties>
