@@ -1,4 +1,4 @@
-# LotterySystem
+# Lottery System
 
 The system should have a way to create Lotteries. Users can participate to any lottery that isn't finished yet. 
 When you participate to a Lottery you become part of its extraction pool of potential winners. 
