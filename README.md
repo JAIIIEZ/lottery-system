@@ -79,14 +79,14 @@ spring.messages.basename=validation
 Following is the packing structure of our Lottery System
 
 
-<img src="images/structure.png" alt="drawing" width="400"/>
+<img src="images/structure.png" alt="drawing" width="600"/>
 
 ## 4 - Database Design
 
 The PostgreSQL database looks like:
 
 
-<img src="images/postgresql.png" alt="drawing" width="800"/>
+<img src="images/postgresql.png" alt="drawing" width="600"/>
 
 
 ## 5 - Exception(Error) Handling for RESTful Services
