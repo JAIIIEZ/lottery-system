@@ -99,28 +99,28 @@ http://localhost:8080/register
 
 ## 6 - Testing REST APIs via Postman Client
 
-### User registration
+* ### User registration
 <img src="images/postman_images/user_register.png" alt="drawing"/>
 
-### Throws exception if user trys to register with same username
+* ### Throws exception if user trys to register with same username
 <img src="images/postman_images/user_already_exist.png" alt="drawing"/>
 
-### Get all active lotteries
+* ### Get all active lotteries
 <img src="images/postman_images/active_lotteries.png" alt="drawing"/>
 
-### Submit lottery ticket
+* ### Submit lottery ticket
 <img src="images/postman_images/sumbit_lottery_ticket.png" alt="drawing"/>
 
-### Throws exception if user trys to submit ticket with unregistered username
+* ### Throws exception if user trys to submit ticket with unregistered username
 <img src="images/postman_images/submit_lottery_with_invalid_username.png" alt="drawing"/>
 
-### Throws exception if user trys to submit ticket for passive lottery
+* ### Throws exception if user trys to submit ticket for passive lottery
 <img src="images/postman_images/submit_passive_lottery.png" alt="drawing"/>
 
-### End lottery by lottery id
+* ### End lottery by lottery id
 <img src="images/postman_images/end_lottery_by_id.png" alt="drawing"/>
 
-### Throws exception if lottery does not exist
+* ### Throws exception if lottery does not exist
 <img src="images/postman_images/end_invalid_lottery.png" alt="drawing"/>
 
 
