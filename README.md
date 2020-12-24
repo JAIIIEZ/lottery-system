@@ -11,7 +11,20 @@ Requirements are:
 - All users will be able to check the winning ballot for any specific date.
 - The service will have to persist the data regarding the lottery.
 
-## 1 - Tools and Technologies Used
+## 1 - What I have built
+I have built a CRUD RESTFul APIs for a Lottery System using Spring Boot 2 JPA and PostgreSQL database. Following are REST APIs (Controller handler methods) are created for lottery-system.
+
+|   No     |   API Name    |   HTTP Method | Path |  Status Code | Description |
+|----------|---------------|---------------|------|--------------| ------------|
+|   (1)    |    POST       |   POST  |    |    |    |
+|   (2)    |    |    |    |    |    |
+|   (3)    |    |    |    |    |    |
+|   (4)    |    |    |    |    |    |
+|   (5)    |    |    |    |    |    |
+|   (6)    |    |    |    |    |    |
+|   (7)    |    |    |    |    |    |
+
+## 2 - Tools and Technologies Used
 
 * [Spring Boot] - 2.0.4.RELEASE
 * [JDK] - 1.8 or later
@@ -27,15 +40,13 @@ Requirements are:
 * [Bootstrap]
 
 
-## 2 - Packaging Structure
+## 3 - Packaging Structure
 Following is the packing structure of our Lottery System
-
-
 
 
 <img src="images/structure.png" alt="drawing" width="400"/>
 
-## 3 - Database Design
+## 4 - Database Design
 
 The PostgreSQL database looks like:
 
@@ -43,9 +54,50 @@ The PostgreSQL database looks like:
 <img src="images/postgresql.png" alt="drawing" width="800"/>
 
 
+## 5 - Exception(Error) Handling for RESTful Services
 
-## 4 - Testing REST APIs via Postman Client
+Spring Boot provides a good default implementation for exception handling for RESTful Services. @ControllerAdvice is a specialization of the @Component annotation which allows to handle exceptions across the whole application in one global handling component.
 
+
+* ### Resource Not Present
+Heres what happens when you fire a request to a resource not found:
+
+http://localhost:8080/lottery/endLotteryAndSelectRandomLotteryWinner/5  
+
+``
+{  
+    "timestamp": "2020-12-23T16:44:39.079+00:00",  
+    "message": "Lottery not found for this id :: 5",  
+    "details": "uri=/lottery/endLotteryAndSelectRandomLotteryWinner/5"  
+}  
+``
+
+* ### Get Active Lottery Result 
+http://localhost:8080/lotteryResult/5  
+
+``
+{  
+    "timestamp": "2020-12-23T17:16:46.879+00:00",  
+    "message": "Lottery is not finish yet :: 5",  
+    "details": "uri=/lotteryResult/5"  
+}  
+``
+* ### Invalid User Registration  
+  
+http://localhost:8080/register  
+
+
+``  
+{  
+    "timestamp": "2020-12-23T14:13:02.501+00:00",  
+    "message": "user already exist :: mervekay",  
+    "details": "uri=/register"  
+}  
+``  
+ 
+
+
+## 6 - Testing REST APIs via Postman Client
 
 ### User registration
 <img src="images/postman_images/user_register.png" alt="drawing"/>
@@ -72,7 +124,7 @@ The PostgreSQL database looks like:
 <img src="images/postman_images/end_invalid_lottery.png" alt="drawing"/>
 
 
-## 5 - Coulda/Woulda/Shoulda
+## 7 - Coulda/Woulda/Shoulda
 
 - I would have implement integration tests.
 - I could load data from the xml file using the dbunit library while writing unit tests. (https://springtestdbunit.github.io/spring-test-dbunit/index.html)
