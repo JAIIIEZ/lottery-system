@@ -59,41 +59,42 @@ The PostgreSQL database looks like:
 Spring Boot provides a good default implementation for exception handling for RESTful Services. @ControllerAdvice is a specialization of the @Component annotation which allows to handle exceptions across the whole application in one global handling component.
 
 
-* ### Resource Not Present
+- ### Resource Not Present
 Heres what happens when you fire a request to a resource not found:
 
 http://localhost:8080/lottery/endLotteryAndSelectRandomLotteryWinner/5  
 
-``
+ ```sh
 {  
     "timestamp": "2020-12-23T16:44:39.079+00:00",  
     "message": "Lottery not found for this id :: 5",  
     "details": "uri=/lottery/endLotteryAndSelectRandomLotteryWinner/5"  
 }  
-``
+ ```
 
-* ### Get Active Lottery Result 
+- ### Get Active Lottery Result 
 http://localhost:8080/lotteryResult/5  
 
-``
+ ```sh
 {  
     "timestamp": "2020-12-23T17:16:46.879+00:00",  
     "message": "Lottery is not finish yet :: 5",  
     "details": "uri=/lotteryResult/5"  
 }  
-``
-* ### Invalid User Registration  
+ ```
+ 
+- ### Invalid User Registration  
   
 http://localhost:8080/register  
 
 
-``  
+ ```sh
 {  
     "timestamp": "2020-12-23T14:13:02.501+00:00",  
     "message": "user already exist :: mervekay",  
     "details": "uri=/register"  
 }  
-``  
+ ``` 
  
 
 
