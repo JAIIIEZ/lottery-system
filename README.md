@@ -66,7 +66,7 @@ spring.messages.basename=validation
 * ```Hibernate``` - 5.2.17.Final
 * ```Spring Data``` JPA
 * ```Maven``` - 3.2+
-* ```IDE``` - Eclipse or Spring Tool Suite (STS)
+* ```IDE``` - IntelliJ IDEA
 * ```PostgreSQL``` - 42.2.5
 * ```JSP```
 * ```Spring Security```
