@@ -83,6 +83,38 @@ Following is the packing structure of our Lottery System
 
 ## 4 - Database Design
 
+Since I am planning on querying the database with different queries and I need to join between storages I prefered using a standard SQL database and not a noSql approach. NoSQL databases really shine if the data to store is not so well defined. However, I have a clear pattern of data to store. Here is how I design:
+
+**lottery**
+
+- id 
+- name
+- start_date
+- end_date
+- winnerLotteryNumber
+
+
+**lottery_ticket**
+- id 
+- lottery_id
+- username
+- lotteryNumber
+- date
+
+**users**
+
+- id
+- username
+- first_name
+- last_name
+- password
+- role
+
+**role**
+- id
+- name
+
+
 The PostgreSQL database looks like:
 
 
