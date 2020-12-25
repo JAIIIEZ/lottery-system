@@ -83,7 +83,9 @@ Following is the packing structure of our Lottery System
 
 ## 4 - Database Design
 
-Since I am planning on querying the database with different queries and I need to join between storages I prefered using a standard SQL database and not a noSql approach. NoSQL databases really shine if the data to store is not so well defined. However, I have a clear pattern of data to store. Here is how I design:
+Since I am planning on querying the database with different queries and I need to join between storages I prefered using a standard SQL database and not a noSql approach. NoSQL databases really shine if the data to store is not so well defined. However, I have a clear pattern of data to store. 
+
+I have 4 tables for lottery design. One called lottery which holds the lottery information for the current lottery and one called lottery_ticket holding the ticket information for the lotteries. Users table holds user details and role table defines user role. Here is how I design:
 
 **lottery**
 
@@ -98,7 +100,7 @@ Since I am planning on querying the database with different queries and I need t
 - id 
 - lottery_id
 - username
-- lotteryNumber
+- lotteryNumber (The number of the ticket in the current lottery. It contains sequential numbers for per lottery.)
 - date
 
 **users**
