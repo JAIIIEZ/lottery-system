@@ -1,10 +1,10 @@
 # Lottery System
 
-The system should have a way to create Lotteries. Users can participate to any lottery that isn't finished yet. 
+The system should have a way to create Lotteries. Users can participate in any lottery that isn't finished yet. 
 When you participate to a Lottery you become part of its extraction pool of potential winners. 
 Once the Lottery closes a random winner is extracted from the pool and save winner number in a storage.
 
-Requirements are:
+Logic is:
 - The service will allow anyone to register as a lottery participant.
 - Lottery participants will be able to submit as many lottery ballots for any lottery that isn’t yet finished.
 - Each day at midnight the lottery event will be considered closed and a random lottery winner will be selected from all participants for the day.
@@ -13,7 +13,7 @@ Requirements are:
 
 ## 1 - How to Run Project
 
-- Running with Docker Compose:
+-  ### Running with Docker Compose:
 
 Simply use: 
 
@@ -21,9 +21,9 @@ Simply use:
 $ docker-compose up
 $ docker-compose down
  ```
- - Running on your local:
+ -  ### Running on your local:
  
- ### Prerequisites
+ #### Prerequisites
  
  - Java 11
  - Postgresql
@@ -32,7 +32,7 @@ $ docker-compose down
       - IntelliJ IDEA
       - VS Code
  
- Create your database named "lottery" in postgresql and change application.properties as :
+ Create your database named **lottery** in postgresql and change **application.properties** as :
 
 ```sh
 spring.datasource.url=jdbc:postgresql://localhost:5432/lottery
@@ -55,24 +55,24 @@ spring.messages.basename=validation
  Then run that command in terminal:
  
   ```sh
- mvn clean spring-boot:run
+ $ mvn clean spring-boot:run
  ```
 
 ## 2 - Tools and Technologies Used
 
-* [Spring Boot] - 2.0.4.RELEASE
-* [JDK] - 1.8 or later
-* [Spring Framework] - 5.0.8 RELEASE
-* [Hibernate] - 5.2.17.Final
-* [Spring Data] JPA
-* [Maven] - 3.2+
-* [IDE] - Eclipse or Spring Tool Suite (STS)
-* [PostgreSQL] - 42.2.5
-* [JSP]
-* [Spring Security]
-* [Spring Web]
-* [Postman]
-* [SonarLint]
+* ```Spring Boot```- 2.0.4.RELEASE
+* ```JDK``` - 1.8 or later
+* ```Spring Framework``` - 5.0.8 RELEASE
+* ```Hibernate``` - 5.2.17.Final
+* ```Spring Data``` JPA
+* ```Maven``` - 3.2+
+* ```IDE``` - Eclipse or Spring Tool Suite (STS)
+* ```PostgreSQL``` - 42.2.5
+* ```JSP```
+* ```Spring Security```
+* ```Spring Web```
+* ```Postman```
+* ```SonarLint```
 
 
 ## 3 - Packaging Structure
@@ -91,11 +91,11 @@ The PostgreSQL database looks like:
 
 ## 5 - Exception(Error) Handling for RESTful Services
 
-Spring Boot provides a good default implementation for exception handling for RESTful Services. @ControllerAdvice is a specialization of the @Component annotation which allows to handle exceptions across the whole application in one global handling component.
+Spring Boot provides a good default implementation for exception handling for RESTful Services. **@ControllerAdvice** is a specialization of the @Component annotation which allows to handle exceptions across the whole application in one global handling component.
 
 
 - ### Resource Not Present
-Heres what happens when you fire a request to a resource not found:
+Here's what happens when you fire a request to a resource not found:
 
 http://localhost:8080/lottery/endLotteryAndSelectRandomLotteryWinner/5  
 
@@ -132,8 +132,9 @@ http://localhost:8080/register
  ``` 
  
 
-
 ## 6 - Testing REST APIs via Postman Client
+
+You can find all api queries in the attachted postman collection [here](lottery-system.postman_collection.json).
 
 * ### User registration
 <img src="images/postman_images/user_register.png" alt="drawing"/>
@@ -162,8 +163,9 @@ http://localhost:8080/register
 
 ## 7 - Coulda/Woulda/Shoulda
 
-- I would have implement integration tests.
-- I could load data from the xml file using the dbunit library while writing unit tests. (https://springtestdbunit.github.io/spring-test-dbunit/index.html)
-- I would have complete front-end part.
-- I could have extend queries usign DateUtils.
-- I could have implement submit ticket endpoint without username parameter, I could have get active user automatically.
+- [ ] I would have implemented integration tests.
+- [ ] I could have loaded data from the xml file using the [dbunit](https://springtestdbunit.github.io/spring-test-dbunit/index.html) library while writing unit tests. 
+- [ ] I would have completed front-end part.
+- [ ] I could have extended queries usign DateUtils.
+- [ ] I could have implemented submit ticket endpoint without username parameter, I could have get active user automatically.
+- [x] I would have dockerized the project.
