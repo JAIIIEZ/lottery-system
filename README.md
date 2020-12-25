@@ -100,7 +100,7 @@ I have 4 tables for the lottery design. One called lottery which holds the lotte
 - id 
 - lottery_id
 - username
-- lotteryNumber (The number of the ticket in the current lottery. It contains sequential numbers for per lottery.)
+- lotteryNumber (The number of the ticket in the current lottery. It contains sequential numbers per lottery.)
 - date
 
 **users**
@@ -203,3 +203,4 @@ You can find all api queries in the attachted postman collection [here](lottery-
 - [ ] I could have extended queries usign DateUtils.
 - [ ] I could have implemented submit ticket endpoint without username parameter, I could have get active user automatically.
 - [x] I would have dockerized the project.
+- [ ] I could have designed the project for a distributed system. I lock the submitLotteryTicket method and let only one thread can run the endpoint at a time. Since each lottery number is generated sequentially, I need to be sure each user has a unique lottery number per lottery. A better solution would be generating a sequence numbers for a distributed system.
