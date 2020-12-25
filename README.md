@@ -13,7 +13,7 @@ Logic is:
 
 ## 1 - How to Run Project
 
--  ### Running with Docker Compose:
+-  ### Running with Docker Compose
 
 Simply use: 
 
@@ -21,7 +21,7 @@ Simply use:
 $ docker-compose up
 $ docker-compose down
  ```
- -  ### Running on your local:
+ -  ### Running on your local
  
  #### Prerequisites
  
@@ -76,7 +76,7 @@ spring.messages.basename=validation
 
 
 ## 3 - Packaging Structure
-Following is the packing structure of our Lottery System
+Following is the packing structure of our Lottery System:
 
 
 <img src="images/structure.png" alt="drawing" width="600"/>
@@ -85,7 +85,7 @@ Following is the packing structure of our Lottery System
 
 Since I am planning on querying the database with different queries and I need to join between storages I prefered using a standard SQL database and not a noSql approach. NoSQL databases really shine if the data to store is not so well defined. However, I have a clear pattern of data to store. 
 
-I have 4 tables for lottery design. One called lottery which holds the lottery information for the current lottery and one called lottery_ticket holding the ticket information for the lotteries. Users table holds user details and role table defines user role. Here is how I design:
+I have 4 tables for the lottery design. One called lottery which holds the lottery information for the current lottery and one called lottery_ticket holding the ticket information for the lotteries. Users table holds user details and role table defines user role. Here is how I design:
 
 **lottery**
 
