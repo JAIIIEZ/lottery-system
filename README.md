@@ -21,7 +21,7 @@ Simply use:
 $ docker-compose up
 $ docker-compose down
  ```
- -  ### Running on your local
+ -  ### Running on Your Local
  
  #### Prerequisites
  
