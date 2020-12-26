@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.dto.UserDto;
-import com.spring.model.ResponseTransfer;
+import com.spring.dto.ResponseTransfer;
 import com.spring.service.SecurityService;
 import com.spring.service.UserService;
 import com.spring.validator.UserValidator;

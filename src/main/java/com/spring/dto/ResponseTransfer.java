@@ -1,4 +1,4 @@
-package com.spring.model;
+package com.spring.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

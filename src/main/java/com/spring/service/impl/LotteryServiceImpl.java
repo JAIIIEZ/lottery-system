@@ -59,7 +59,7 @@ public class LotteryServiceImpl implements LotteryService {
         return lottery;
     }
 
-    @Transactional
+
     @Override
     public void endActiveLotteriesAndSelectLotteryWinners() {
         List<Lottery> lotteries = getActiveLotteries();

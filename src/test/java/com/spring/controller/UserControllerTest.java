@@ -56,7 +56,7 @@ public class UserControllerTest {
     }
 
     @Test(expected = UserAlreadyExistException.class)
-    public void givenUserRegistered_whenDuplicatedRegister_thenCorrect() throws Exception, UserAlreadyExistException {
+    public void givenUserRegistered_whenDuplicatedRegister_thenCorrect() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/register")
                 .accept(MediaType.APPLICATION_JSON)

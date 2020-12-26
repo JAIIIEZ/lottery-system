@@ -12,7 +12,7 @@ import com.spring.exception.LotteryStatusException;
 import com.spring.exception.ResourceNotFoundException;
 import com.spring.exception.UnableToSaveException;
 import com.spring.model.Lottery;
-import com.spring.model.ResponseTransfer;
+import com.spring.dto.ResponseTransfer;
 import com.spring.service.LotteryService;
 
 @RestController
@@ -53,7 +53,6 @@ public class LotteryController {
     }
 
     @GetMapping(value = "/lotteryResult/{lotteryId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public LotteryResultDto getLotteryResultByLotteryId(@PathVariable("lotteryId") Long lotteryId) throws ResourceNotFoundException, LotteryStatusException {
         return lotteryService.getLotteryResultByLotteryId(lotteryId);
     }
