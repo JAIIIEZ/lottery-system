@@ -93,14 +93,14 @@ I have 4 tables for the lottery design. One called lottery which holds the lotte
 - name
 - start_date
 - end_date
-- winnerLotteryNumber
+- winner_lottery_num
 
 
 **lottery_ticket**
 - id 
 - lottery_id
 - username
-- lotteryNumber (The number of the ticket in the current lottery. It contains sequential numbers per lottery.)
+- lottery_number (The number of the ticket in the current lottery. It contains sequential numbers per lottery.)
 - date
 
 **users**
@@ -142,7 +142,7 @@ http://localhost:8080/lottery/endLotteryAndSelectRandomLotteryWinner/5
  ```
 
 - ### Get Active Lottery Result 
-http://localhost:8080/lotteryResult/5  
+http://localhost:8080/lottery/lotteryResult/5  
 
  ```sh
 {  
