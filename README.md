@@ -11,6 +11,11 @@ Logic is:
 - All users will be able to check the winning ballot for any specific date.
 - The service will have to persist the data regarding the lottery.
 
+Additionally:
+- An unregistered user cannot purchase lottery tickets.
+- The lottery can always be started with the lottery name. The only rule is that multiple active lotteries cannot be created with the same lottery name.
+- The lottery ticket number has a unique sequential generated number per lottery starting at 1.
+
 ## 1 - How to Run Project
 
 -  ### Running with Docker Compose
